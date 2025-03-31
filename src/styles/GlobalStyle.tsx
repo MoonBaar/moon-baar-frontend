@@ -15,6 +15,8 @@ const GlobalStyle = createGlobalStyle`
     body {
         font-family: 'Noto Sans KR';
         width: 44rem;
+        background-color: #F3F4F6;
+        color: #030712;
     } 
     input {
         outline: none;
@@ -34,6 +36,8 @@ const GlobalStyle = createGlobalStyle`
     main {
         margin: 1.6rem;
         padding: 1.6rem;
+        border-radius: 8px;
+        background-color: #fff;
     }
 
     @media screen and (max-width: 440px) {
