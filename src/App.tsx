@@ -1,9 +1,8 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {ThemeProvider} from 'styled-components';
-import {theme} from './styles/themes/theme';
-import GlobalStyle from './styles/GlobalStyle';
+import {theme} from '@/styles/themes/theme';
+import GlobalStyle from '@/styles/GlobalStyle';
 
 function App() {
   return (
