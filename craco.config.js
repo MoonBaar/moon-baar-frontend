@@ -1,4 +1,5 @@
-import { CracoAliasPlugin } from 'react-app-alias';
+/* eslint-disable */
+const { CracoAliasPlugin } = require('react-app-alias');
 
 module.exports = {
   plugins: [
