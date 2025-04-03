@@ -34,9 +34,10 @@ const GlobalStyle = createGlobalStyle`
         color: inherit;
     }
     main {
-        margin: 1.6rem;
-        padding: 1.6rem;
-        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 18.5rem);
         background-color: #fff;
     }
 
