@@ -10,10 +10,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Routes>
-        <Route path='/' element={<Map />} />
-        <Route path='/event' element={<Event />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path='/' element={<Map />} />
+          <Route path='/event' element={<Event />} />
+        </Routes>
+      </main>
     </ThemeProvider>
   );
 }

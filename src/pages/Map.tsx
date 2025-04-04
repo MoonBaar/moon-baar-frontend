@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 import Header from '../components/Header/Header';
-import BottomNav from '../components/BottomNav';
+import Footer from '../components/Footer';
+import {Container} from './Event';
 
 function Map() {
   return (
     <>
       <Header />
-      <main>
+      <Container>
         <div>지도</div>
-      </main>
-      <BottomNav page={'map'} />
+      </Container>
+      <Footer page={'map'} />
     </>
   );
 }

@@ -4,26 +4,29 @@ import search from '../../assets/img/search.png';
 
 function Header() {
   return (
-    <Container>
-      <HeaderContainer>
+    <HeaderContainer>
+      <TitleContainer>
         <Title>문발</Title>
         <User>
           <div>김문화님</div>
           <img src={profile} alt='profile' />
         </User>
-      </HeaderContainer>
+      </TitleContainer>
       <SearchContainer>
         <SearchBar>
           <img src={search} alt='search' />
           <input type='text' placeholder='행사 검색' />
         </SearchBar>
       </SearchContainer>
-    </Container>
+    </HeaderContainer>
   );
 }
 
-const Container = styled.header`
-  position: relative;
+const HeaderContainer = styled.header`
+  position: fixed;
+  top: 0;
+  max-width: 44rem;
+  width: 100%;
   height: 12rem;
   background-color: ${props => props.theme.colors.primary};
   color: white;
@@ -33,7 +36,7 @@ const Container = styled.header`
   z-index: 10;
 `;
 
-const HeaderContainer = styled.div`
+const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

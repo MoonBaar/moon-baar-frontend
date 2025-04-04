@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
         width: 44rem;
         background-color: #F3F4F6;
         color: #030712;
+        margin: 0;
     } 
     input {
         outline: none;
@@ -34,10 +35,6 @@ const GlobalStyle = createGlobalStyle`
         color: inherit;
     }
     main {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: calc(100vh - 18.5rem);
         background-color: #fff;
     }
 

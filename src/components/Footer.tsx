@@ -5,11 +5,11 @@ import badge from '../assets/img/badge.svg';
 import statistics from '../assets/img/statistics.svg';
 import {useNavigate} from 'react-router-dom';
 
-function BottomNav({page}: {page: string}) {
+function Footer({page}: {page: string}) {
   const navigate = useNavigate();
 
   return (
-    <Container>
+    <FooterContainer>
       <NavItem fillColor={page === 'map'} onClick={() => navigate('/')}>
         <img src={map} alt='map' />
         <div>지도</div>
@@ -29,11 +29,15 @@ function BottomNav({page}: {page: string}) {
         <img src={statistics} alt='statistics' />
         <div>통계</div>
       </NavItem>
-    </Container>
+    </FooterContainer>
   );
 }
 
-const Container = styled.footer`
+const FooterContainer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  max-width: 44rem;
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -65,4 +69,4 @@ const NavItem = styled.div<{fillColor?: boolean; page?: string}>`
   }
 `;
 
-export default BottomNav;
+export default Footer;
