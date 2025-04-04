@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
         width: 44rem;
         background-color: #F3F4F6;
         color: #030712;
+        margin: 0;
     } 
     input {
         outline: none;
@@ -34,9 +35,6 @@ const GlobalStyle = createGlobalStyle`
         color: inherit;
     }
     main {
-        margin: 1.6rem;
-        padding: 1.6rem;
-        border-radius: 8px;
         background-color: #fff;
     }
 
