@@ -33,6 +33,7 @@ const HeaderContainer = styled.header`
   box-shadow:
     0px 4px 6px -1px rgba(0, 0, 0, 0.1),
     0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 `;
 
 const TitleContainer = styled.div`

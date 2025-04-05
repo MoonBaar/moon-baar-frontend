@@ -43,6 +43,7 @@ const Background = styled.div`
   width: inherit;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 `;
 
 const Container = styled.div<{$height: number}>`
@@ -58,6 +59,7 @@ const Container = styled.div<{$height: number}>`
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 1.5rem;
+  z-index: 11;
 
   @media screen and (max-width: 44rem) {
     width: calc(100% - 9rem);
