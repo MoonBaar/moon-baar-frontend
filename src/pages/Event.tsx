@@ -48,8 +48,6 @@ export const Container = styled.div`
   justify-content: center;
   gap: 1.6rem;
   padding: 2.4rem;
-  width: 100%;
-  max-width: 44rem;
   min-height: calc(100vh - 18.5rem);
   margin-top: 12rem;
   margin-bottom: 6.5rem;

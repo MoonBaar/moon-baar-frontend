@@ -1,11 +1,9 @@
-import './App.css';
-import Map from './pages/Map';
 import {Route, Routes} from 'react-router-dom';
-import Event from './pages/Event';
-import logo from './logo.svg';
 import {ThemeProvider} from 'styled-components';
 import {theme} from '@/styles/themes/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
+import Map from '@/pages/Map';
+import Event from '@/pages/Event';
 
 function App() {
   return (
