@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import Header from '../components/Header/Header';
-import Footer from '../components/Footer';
 import {Container} from './Event';
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer';
 
 function Map() {
   return (

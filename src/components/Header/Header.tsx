@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import profile from '../../assets/img/profile.svg';
-import search from '../../assets/img/search.png';
+import profile from '@/assets/img/profile.svg';
+import search from '@/assets/img/search.svg';
 
 function Header() {
   return (
@@ -28,8 +28,8 @@ const HeaderContainer = styled.header`
   max-width: 44rem;
   width: 100%;
   height: 12rem;
-  background-color: ${props => props.theme.colors.primary};
-  color: white;
+  background-color: white;
+  color: ${props => props.theme.colors.neutral1};
   box-shadow:
     0px 4px 6px -1px rgba(0, 0, 0, 0.1),
     0px 2px 4px -2px rgba(0, 0, 0, 0.1);
@@ -48,16 +48,14 @@ const TitleContainer = styled.div`
 const Title = styled.h1`
   font-size: ${props => props.theme.sizes.xl};
   font-weight: bold;
-  color: white;
 `;
 
-const User = styled.p`
+const User = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.8rem;
   font-size: ${props => props.theme.sizes.s};
-  color: white;
   margin-right: 0.8rem;
   cursor: pointer;
 `;
@@ -68,7 +66,6 @@ const SearchContainer = styled.div`
   padding: 0 1.6rem 1.6rem 1.6rem;
   width: 100%;
   height: 5.6rem;
-  background-color: ${props => props.theme.colors.primary};
 `;
 
 const SearchBar = styled.div`
@@ -80,6 +77,7 @@ const SearchBar = styled.div`
   background-color: white;
   border-radius: 999rem;
   padding: 0.9rem 1rem 1rem 1.2rem;
+  border: 1px solid #d1d5db;
 
   input {
     width: 100%;
