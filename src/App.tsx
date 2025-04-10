@@ -1,10 +1,10 @@
-import './App.css';
-import Map from './pages/Map';
 import {Route, Routes} from 'react-router-dom';
-import Event from './pages/Event';
 import {ThemeProvider} from 'styled-components';
 import {theme} from '@/styles/themes/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
+import Map from '@/pages/Map';
+import Event from '@/pages/Event';
+import Badge from '@/pages/Badge';
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Map />} />
           <Route path='/event' element={<Event />} />
+          <Route path='/badge' element={<Badge />} />
         </Routes>
       </main>
     </ThemeProvider>
