@@ -32,7 +32,7 @@ function Detail() {
       {info && (
         <Layout headerHeight='6.5rem' footerHeight='0'>
           <MainImage
-            imageUrl={info.imageUrl}
+            imageUrl={info.mainImg}
             isLiked={false}
             category={info.category}
           />

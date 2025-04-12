@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {ReactComponent as People} from '@/assets/img/people.svg';
-import {ReactComponent as Liked} from '@/assets/img/likeL.svg';
+import {ReactComponent as Liked} from '@/assets/img/like.svg';
 
 interface StatsProps {
   visitCount: number;
@@ -18,7 +18,7 @@ function VisitedStats({visitCount, likeCount}: StatsProps) {
           <p>방문</p>
         </StatsWrap>
         <StatsWrap>
-          <Liked />
+          <Liked stroke='#DB2777' />
           <h3>{likeCount}</h3>
           <p>좋아요</p>
         </StatsWrap>

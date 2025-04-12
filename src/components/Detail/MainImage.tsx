@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import {ReactComponent as Share} from '@/assets/img/share.svg';
 import {ReactComponent as Like} from '@/assets/img/like.svg';
-import {ReactComponent as LikeFilled} from '@/assets/img/likeFilled.svg';
 import {useState} from 'react';
 
 interface ImageProps {
@@ -20,7 +19,11 @@ function MainImage({imageUrl, isLiked, category}: ImageProps) {
           <Share />
         </ButtonWrap>
         <ButtonWrap onClick={() => setLike(prev => !prev)}>
-          {like ? <LikeFilled /> : <Like />}
+          {like ? (
+            <Like stroke='#DB2777' fill='#DB2777' />
+          ) : (
+            <Like stroke='#374151' />
+          )}
         </ButtonWrap>
       </ButtonArea>
       <CategoryWrap>{category}</CategoryWrap>
@@ -50,9 +53,7 @@ const ButtonWrap = styled.button`
   width: 3.6rem;
   height: 3.6rem;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0.8rem;
 `;
 
 const CategoryWrap = styled.div`

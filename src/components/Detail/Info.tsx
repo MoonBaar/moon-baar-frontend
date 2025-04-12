@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {EventProps} from '@/assets/types/event';
-import {ReactComponent as Location} from '@/assets/img/locationM.svg';
+import {ReactComponent as Location} from '@/assets/img/location.svg';
 import {ReactComponent as Calendar} from '@/assets/img/calendar.svg';
 import {ReactComponent as Ticket} from '@/assets/img/ticket.svg';
 import {ReactComponent as Users} from '@/assets/img/users.svg';
@@ -17,7 +17,7 @@ function Info({data}: InfoProps) {
       <Title>{data.title}</Title>
       <InfoArea>
         <InfoWrap>
-          <Location />
+          <Location width='18px' height='18px' />
           <h3>{data.place}</h3>
         </InfoWrap>
         <InfoWrap>

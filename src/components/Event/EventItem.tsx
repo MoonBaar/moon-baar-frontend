@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import location from '@/assets/img/location.svg';
+import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
 import {EventProps} from '@/assets/types/event';
 import {useNavigate} from 'react-router-dom';
@@ -13,7 +13,7 @@ function EventItem({
   startDate,
   endDate,
   isFree,
-  imageUrl,
+  mainImg,
   latitude,
   longitude,
   isLiked,
@@ -32,7 +32,7 @@ function EventItem({
 
   return (
     <EventItemContainer onClick={() => navigate(`/event/${id}`)}>
-      <MainImage src={imageUrl} alt='mainImage' />
+      <MainImage src={mainImg} alt='mainImage' />
       <EventContent>
         <FilterList>
           <FilterItem>{category}</FilterItem>
@@ -40,7 +40,7 @@ function EventItem({
         </FilterList>
         <EventTitle>{title}</EventTitle>
         <EventPlace>
-          <img src={location} alt='location' />
+          <Location width='14px' height='14px' />
           <div>{place}</div>
         </EventPlace>
         <EventDate>

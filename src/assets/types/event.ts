@@ -11,7 +11,7 @@ export interface EventProps {
   useTarget?: string;
   program?: string;
   etcDesc?: string;
-  imageUrl: string;
+  mainImg: string;
   orgName?: string;
   orgLink?: string;
   latitude: number;
