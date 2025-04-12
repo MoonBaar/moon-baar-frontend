@@ -4,9 +4,9 @@ import {getEventList} from '@/apis/api/event';
 import EventItem from './EventItem';
 import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
-import {EventListProps} from '@/assets/types/eventListType';
 import EventItemSkeleton from './EventItemSkeleton';
 import {useEventFilterStore} from '@/store/eventList';
+import {EventListProps} from '@/assets/types/event';
 
 function EventList() {
   const [category, setCategory] = useState<number | null>(null);

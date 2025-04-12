@@ -1,4 +1,4 @@
-import {EventListProps} from '@/assets/types/eventListType';
+import {EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 
 interface EventListParams {
@@ -19,4 +19,14 @@ export const getEventList = async ({
   });
 
   return data;
+};
+
+export const getEventDetail = async (id: number) => {
+  try {
+    const {data} = await baseAPI.get(`/events/${id}`);
+
+    return data;
+  } catch (error) {
+    console.log('get event detail fail: ', error);
+  }
 };

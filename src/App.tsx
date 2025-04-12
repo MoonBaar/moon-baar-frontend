@@ -5,6 +5,7 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import Map from '@/pages/Map';
 import Event from '@/pages/Event';
 import Badge from '@/pages/Badge';
+import Detail from '@/pages/Detail';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Map />} />
         <Route path='/event' element={<Event />} />
+        <Route path='/event/:id' element={<Detail />} />
         <Route path='/badge' element={<Badge />} />
       </Routes>
     </ThemeProvider>
