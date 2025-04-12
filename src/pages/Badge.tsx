@@ -1,7 +1,7 @@
-import Achievement from '@/components/Achievement';
-import BadgeItem from '@/components/BadgeItem';
+import Achievement from '@/components/common/Achievement';
+import BadgeItem from '@/components/Badge/BadgeItem';
 import Footer from '@/components/common/Footer';
-import Header from '@/components/Header/Header';
+import Header from '@/components/common/Header/Header';
 import {useState} from 'react';
 import styled from 'styled-components';
 

@@ -7,7 +7,7 @@ import {useEventFilterStore, useScrollStore} from '@/store/eventList';
 import FilterItem from '@/components/Event/FilterItem';
 import filter from '@/assets/img/filter.png';
 import Layout from '@/components/common/Layout';
-import Header from '@/components/Header/Header';
+import Header from '@/components/common/Header/Header';
 import Footer from '@/components/common/Footer';
 import {
   categoryOption,

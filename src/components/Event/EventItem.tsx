@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import location from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
-import {EventProps} from '@/assets/types/eventListType';
+import {EventProps} from '@/assets/types/event';
+import {useNavigate} from 'react-router-dom';
 
 function EventItem({
   id,
@@ -17,6 +18,8 @@ function EventItem({
   longitude,
   isLiked,
 }: EventProps) {
+  const navigate = useNavigate();
+
   const dateFormat = () => {
     const startDateFormatted = startDate.split('T')[0];
     const endDateFormatted = endDate.split('T')[0];
@@ -28,7 +31,7 @@ function EventItem({
   };
 
   return (
-    <EventItemContainer>
+    <EventItemContainer onClick={() => navigate(`/event/${id}`)}>
       <MainImage src={imageUrl} alt='mainImage' />
       <EventContent>
         <FilterList>

@@ -7,10 +7,19 @@ export interface EventProps {
   startDate: string;
   endDate: string;
   isFree: boolean;
+  useFee?: string;
+  useTarget?: string;
+  program?: string;
+  etcDesc?: string;
   imageUrl: string;
+  orgName?: string;
+  orgLink?: string;
   latitude: number;
   longitude: number;
   isLiked: boolean;
+  isVisited?: boolean;
+  visitCount?: number;
+  likeCount?: number;
 }
 
 export interface EventListProps {

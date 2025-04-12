@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Layout from '@/components/common/Layout';
-import Header from '@/components/Header/Header';
+import Header from '@/components/common/Header/Header';
 import Footer from '@/components/common/Footer';
 import {basicHeaderHeight} from '@/assets/data/constant';
 

@@ -63,7 +63,7 @@ function Header() {
   );
 }
 
-const HeaderContainer = styled.header`
+export const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   max-width: 44rem;
