@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getEventDetail} from '@/apis/api/event';
-import {EventProps} from '@/assets/types/event';
+import {EventDetailProps} from '@/assets/types/event';
 import CheckInBtn from '@/components/Detail/CheckInBtn';
 import Info from '@/components/Detail/Info';
 import MainImage from '@/components/Detail/MainImage';
@@ -11,7 +11,7 @@ import Layout from '@/components/common/Layout';
 
 function Detail() {
   const id = useParams().id;
-  const [info, setInfo] = useState<EventProps>();
+  const [info, setInfo] = useState<EventDetailProps>();
 
   useEffect(() => {
     const getDetail = async () => {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {EventProps} from '@/assets/types/event';
+import {EventDetailProps} from '@/assets/types/event';
 import {ReactComponent as Location} from '@/assets/img/location.svg';
 import {ReactComponent as Calendar} from '@/assets/img/calendar.svg';
 import {ReactComponent as Ticket} from '@/assets/img/ticket.svg';
@@ -8,7 +8,7 @@ import {ReactComponent as Building} from '@/assets/img/building.svg';
 import {ReactComponent as Exlink} from '@/assets/img/link.svg';
 
 interface InfoProps {
-  data: EventProps;
+  data: EventDetailProps;
 }
 
 function Info({data}: InfoProps) {
