@@ -1,61 +1,76 @@
 import styled from 'styled-components';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getEventList} from '@/apis/api/event';
 import EventItem from './EventItem';
-
-export interface EventProps {
-  id: number;
-  title: string;
-  category: string;
-  district: string;
-  place: string;
-  startDate: string;
-  endDate: string;
-  isFree: boolean;
-  imageUrl: string;
-  latitude: number;
-  longitude: number;
-  isLiked: boolean;
-}
-
-interface EventListProps {
-  totalCount: number;
-  totalPages: number;
-  currentPage: number;
-  events: EventProps[];
-}
+import {useInView} from 'react-intersection-observer';
+import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
+import {EventListProps} from '@/assets/types/eventListType';
+import EventItemSkeleton from './EventItemSkeleton';
+import {useEventFilterStore} from '@/store/eventList';
 
 function EventList() {
-  const [eventList, setEventList] = useState<EventListProps | null>(null);
+  const [category, setCategory] = useState<number | null>(null);
+  const [isFree, setIsFree] = useState<boolean | null>(null);
+  const {query, district} = useEventFilterStore();
+  const {ref, inView} = useInView();
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchEventList = async () => {
-      const events = await getEventList();
-      setEventList(events);
-      console.log(events);
-    };
-    fetchEventList();
-  }, []);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, [query, category, isFree, district]);
+
+  const {data, isFetchingNextPage, fetchNextPage, hasNextPage, status} =
+    useInfiniteQuery<EventListProps>({
+      queryKey: [query, 'events', category, isFree],
+      queryFn: async ({pageParam}: QueryFunctionContext) => {
+        return await getEventList({
+          query,
+          page: pageParam as number,
+          category,
+          isFree,
+        });
+      },
+      getNextPageParam: lastPage =>
+        lastPage.currentPage < lastPage.totalPages
+          ? lastPage.currentPage + 1
+          : undefined,
+      staleTime: 1000 * 60 * 5,
+      initialPageParam: 1,
+    });
+
+  // 무한 스크롤
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <EventListContainer>
-      {eventList?.events?.map((event, index) => (
-        <EventItem
-          key={index}
-          id={event.id}
-          title={event.title}
-          category={event.category}
-          district={event.district}
-          place={event.place}
-          startDate={event.startDate}
-          endDate={event.endDate}
-          isFree={event.isFree}
-          imageUrl={event.imageUrl}
-          latitude={event.latitude}
-          longitude={event.longitude}
-          isLiked={event.isLiked}
-        />
-      ))}
+    <EventListContainer ref={listRef}>
+      {status === 'pending' && (
+        <>
+          {Array.from({length: 10}).map((_, i) => (
+            <EventItemSkeleton key={i} />
+          ))}
+        </>
+      )}
+      {status === 'error' && (
+        <ErrorMessage>
+          <div>불러오기에 실패했습니다</div>
+          <div>다시 시도해 주세요</div>
+        </ErrorMessage>
+      )}
+      {data?.pages.map(page =>
+        page.events.map(event => <EventItem key={event.id} {...event} />),
+      )}
+      <div ref={ref} style={{height: '1px'}} />
+      {isFetchingNextPage && (
+        <>
+          {Array.from({length: 5}).map((_, i) => (
+            <EventItemSkeleton key={`skeleton-${i}`} />
+          ))}
+        </>
+      )}
     </EventListContainer>
   );
 }
@@ -64,8 +79,20 @@ const EventListContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
+  margin: auto;
   padding: 0.8rem 1.6rem 0.1rem 1.6rem;
   gap: 1.6rem;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: ${({theme}) => theme.sizes.m};
+  color: ${({theme}) => theme.colors.neutral1};
 `;
 
 export default EventList;

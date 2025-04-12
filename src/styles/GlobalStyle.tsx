@@ -35,7 +35,6 @@ const GlobalStyle = createGlobalStyle`
         color: inherit;
     }
     main {
-        margin: 12rem 0 6.5rem 0;
         background-color: #fff;
     }
 

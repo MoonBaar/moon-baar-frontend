@@ -3,27 +3,39 @@ import map from '@/assets/img/map.svg';
 import event from '@/assets/img/event.svg';
 import badge from '@/assets/img/badge.svg';
 import statistics from '@/assets/img/statistics.svg';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {useRef} from 'react';
 
-function Footer({page}: {page: string}) {
+function Footer() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = useRef(location.pathname);
 
   return (
     <FooterContainer>
-      <NavItem $fillcolor={page === 'map'} onClick={() => navigate('/')}>
+      <NavItem
+        $fillcolor={currentPath.current === '/'}
+        onClick={() => navigate('/')}
+      >
         <img src={map} alt='map' />
         <div>지도</div>
       </NavItem>
-      <NavItem $fillcolor={page === 'event'} onClick={() => navigate('/event')}>
+      <NavItem
+        $fillcolor={currentPath.current === '/event'}
+        onClick={() => navigate('/event')}
+      >
         <img src={event} alt='event' />
         <div>행사</div>
       </NavItem>
-      <NavItem $fillcolor={page === 'badge'} onClick={() => navigate('/badge')}>
+      <NavItem
+        $fillcolor={currentPath.current === '/badge'}
+        onClick={() => navigate('/badge')}
+      >
         <img src={badge} alt='badge' />
         <div>배지</div>
       </NavItem>
       <NavItem
-        $fillcolor={page === 'statistics'}
+        $fillcolor={currentPath.current === '/statistics'}
         onClick={() => navigate('/statistics')}
       >
         <img src={statistics} alt='statistics' />

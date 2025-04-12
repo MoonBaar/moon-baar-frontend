@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import {Container} from './Event';
+import Layout from '@/components/common/Layout';
 import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer';
+import Footer from '@/components/common/Footer';
 
 function Map() {
   return (
     <>
       <Header />
-      <Container>
+      <Layout headerHeight='6.4rem'>
         <div>지도</div>
-      </Container>
-      <Footer page={'map'} />
+      </Layout>
+      <Footer />
     </>
   );
 }

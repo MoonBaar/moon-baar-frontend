@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import location from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
-import {EventProps} from './EventList';
+import {EventProps} from '@/assets/types/eventListType';
 
 function EventItem({
   id,
@@ -29,9 +29,7 @@ function EventItem({
 
   return (
     <EventItemContainer>
-      <MainImage>
-        <img src={imageUrl} alt='mainImage' />
-      </MainImage>
+      <MainImage src={imageUrl} alt='mainImage' />
       <EventContent>
         <FilterList>
           <FilterItem>{category}</FilterItem>
@@ -63,19 +61,12 @@ const EventItemContainer = styled.div`
   cursor: pointer;
 `;
 
-const MainImage = styled.div`
+const MainImage = styled.img`
   width: 10rem;
   height: 13rem;
-  background-color: ${props => props.theme.colors.neutral4};
+  background-color: ${props => props.theme.colors.neutral5};
   border-radius: 0.4rem;
   flex-shrink: 0;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0.4rem;
-  }
 `;
 
 const EventContent = styled.div`
@@ -97,6 +88,7 @@ const FilterItem = styled.div`
   padding: 0.4rem 0.8rem;
   font-size: ${props => props.theme.sizes.xs};
   background-color: ${props => props.theme.colors.neutral5};
+  color: ${props => props.theme.colors.primary};
   border-radius: 1.6rem;
 `;
 

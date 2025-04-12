@@ -1,23 +1,64 @@
 import styled from 'styled-components';
 import profile from '@/assets/img/profile.svg';
 import search from '@/assets/img/search.svg';
+import {useEventFilterStore} from '@/store/eventList';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import close from '@/assets/img/close.svg';
+import {useLocation} from 'react-router-dom';
 
 function Header() {
+  const [inputValue, setInputValue] = useState('');
+  const {query, setQuery} = useEventFilterStore();
+  const location = useLocation();
+  const currentPath = useRef(location.pathname);
+
+  useEffect(() => {
+    if (query) {
+      setInputValue(query);
+    }
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    setQuery(inputValue);
+  }, [inputValue, setQuery]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSearch();
+  };
+
   return (
     <HeaderContainer>
-      <TitleContainer>
+      <TitleWrap>
         <Title>문발</Title>
         <User>
           <div>김문화님</div>
           <img src={profile} alt='profile' />
         </User>
-      </TitleContainer>
-      <SearchContainer>
-        <SearchBar>
-          <img src={search} alt='search' />
-          <input type='text' placeholder='행사 검색' />
-        </SearchBar>
-      </SearchContainer>
+      </TitleWrap>
+      {currentPath.current === '/event' && (
+        <SearchBarWrap onSubmit={handleSubmit}>
+          <SearchBar>
+            <img src={search} alt='search' onClick={handleSearch} />
+            <InputWrap
+              type='text'
+              placeholder='행사 검색'
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+            />
+            {query && (
+              <CloseButton
+                src={close}
+                alt='close'
+                onClick={() => {
+                  setInputValue('');
+                  setQuery(null);
+                }}
+              />
+            )}
+          </SearchBar>
+        </SearchBarWrap>
+      )}
     </HeaderContainer>
   );
 }
@@ -27,7 +68,6 @@ const HeaderContainer = styled.header`
   top: 0;
   max-width: 44rem;
   width: 100%;
-  height: 12rem;
   background-color: white;
   color: ${props => props.theme.colors.neutral1};
   box-shadow:
@@ -36,7 +76,7 @@ const HeaderContainer = styled.header`
   z-index: 10;
 `;
 
-const TitleContainer = styled.div`
+const TitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,7 +100,7 @@ const User = styled.div`
   cursor: pointer;
 `;
 
-const SearchContainer = styled.div`
+const SearchBarWrap = styled.form`
   display: flex;
   justify-content: center;
   padding: 0 1.6rem 1.6rem 1.6rem;
@@ -79,20 +119,37 @@ const SearchBar = styled.div`
   padding: 0.9rem 1rem 1rem 1.2rem;
   border: 1px solid #d1d5db;
 
-  input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    margin-left: 1rem;
-    font-size: ${props => props.theme.sizes.m};
-    color: ${props => props.theme.colors.neutral2};
-    background-color: transparent;
-
-    &::placeholder {
-      color: ${props => props.theme.colors.neutral3};
-    }
+  img {
+    cursor: pointer;
   }
+`;
+
+const InputWrap = styled.input`
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  margin-left: 1rem;
+  font-size: ${props => props.theme.sizes.m};
+  color: ${props => props.theme.colors.neutral2};
+  background-color: transparent;
+
+  &::placeholder {
+    color: ${props => props.theme.colors.neutral3};
+  }
+`;
+
+const CloseButton = styled.img`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  object-fit: cover;
+  filter: invert(46%) sepia(20%) saturate(258%) hue-rotate(182deg)
+    brightness(92%) contrast(92%);
+  cursor: pointer;
 `;
 
 export default Header;

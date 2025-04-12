@@ -1,11 +1,22 @@
+import {EventListProps} from '@/assets/types/eventListType';
 import {baseAPI} from '../instance';
 
-export const getEventList = async () => {
-  try {
-    const {data} = await baseAPI.get('/events');
+interface EventListParams {
+  query?: string | null;
+  page: number;
+  category?: number | null;
+  isFree?: boolean | null;
+}
 
-    return data;
-  } catch (error) {
-    console.log('get event list fail: ', error);
-  }
+export const getEventList = async ({
+  query,
+  page,
+  category,
+  isFree,
+}: EventListParams): Promise<EventListProps> => {
+  const {data} = await baseAPI.get('/events', {
+    params: {query, page, category, isFree},
+  });
+
+  return data;
 };
