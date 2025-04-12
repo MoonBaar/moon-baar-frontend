@@ -14,6 +14,7 @@ import {
   districtOption,
   isFreeOption,
 } from '@/assets/data/filter';
+import {searchHeaderHeight} from '@/assets/data/constant';
 
 function Event() {
   const {scrollY, setScrollY} = useScrollStore();
@@ -67,7 +68,7 @@ function Event() {
   return (
     <>
       <Header />
-      <Layout headerHeight='12rem'>
+      <Layout headerHeight={searchHeaderHeight}>
         <ListHeader>
           <ListHeaderWrap>
             <Title>문화행사</Title>
