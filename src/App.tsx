@@ -10,13 +10,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <main>
-        <Routes>
-          <Route path='/' element={<Map />} />
-          <Route path='/event' element={<Event />} />
-          <Route path='/badge' element={<Badge />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path='/' element={<Map />} />
+        <Route path='/event' element={<Event />} />
+        <Route path='/badge' element={<Badge />} />
+      </Routes>
     </ThemeProvider>
   );
 }

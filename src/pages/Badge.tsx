@@ -1,6 +1,6 @@
 import Achievement from '@/components/Achievement';
 import BadgeItem from '@/components/BadgeItem';
-import Footer from '@/components/Footer';
+import Footer from '@/components/common/Footer';
 import Header from '@/components/Header/Header';
 import {useState} from 'react';
 import styled from 'styled-components';
@@ -111,7 +111,7 @@ function Badge() {
           <Achievement data={achieved} />
         </Box>
       </main>
-      <Footer page='badge' />
+      <Footer />
     </>
   );
 }
