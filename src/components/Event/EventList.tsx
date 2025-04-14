@@ -6,8 +6,8 @@ import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import EventItemSkeleton from './EventItemSkeleton';
 import {useEventFilterStore, useScrollStore} from '@/store/eventList';
-import {useScrollRestore} from '@/hooks/useScrollRestore';
 import {EventListProps} from '@/assets/types/event';
+import {useScrollRestore} from '@/hooks/useScrollRestore';
 
 function EventList() {
   const [category, setCategory] = useState<number | null>(null);
