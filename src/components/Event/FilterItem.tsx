@@ -136,9 +136,9 @@ const FilterOptionList = styled.ul<{$isOpen: boolean}>`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 0.1rem 0.2rem;
   z-index: 10;
-  overflow: hidden;
+  overflow-y: auto;
 
-  max-height: ${({$isOpen}) => ($isOpen ? '500px' : '0')};
+  max-height: ${({$isOpen}) => ($isOpen ? '20rem' : '0')};
   opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
   transition: all 0.3s ease-in-out;
   pointer-events: ${({$isOpen}) => ($isOpen ? 'auto' : 'none')};

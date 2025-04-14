@@ -4,9 +4,10 @@ import {getEventList} from '@/apis/api/event';
 import EventItem from './EventItem';
 import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
-import {EventListProps} from '@/assets/types/eventListType';
 import EventItemSkeleton from './EventItemSkeleton';
-import {useEventFilterStore} from '@/store/eventList';
+import {useEventFilterStore, useScrollStore} from '@/store/eventList';
+import {useScrollRestore} from '@/hooks/useScrollRestore';
+import {EventListProps} from '@/assets/types/event';
 
 function EventList() {
   const [category, setCategory] = useState<number | null>(null);
@@ -14,10 +15,7 @@ function EventList() {
   const {query, district} = useEventFilterStore();
   const {ref, inView} = useInView();
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }, [query, category, isFree, district]);
+  const {scrollY, setScrollY} = useScrollStore();
 
   const {data, isFetchingNextPage, fetchNextPage, hasNextPage, status} =
     useInfiniteQuery<EventListProps>({
@@ -44,6 +42,12 @@ function EventList() {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useScrollRestore({scrollY, setScrollY, data, status});
+
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
 
   return (
     <EventListContainer ref={listRef}>
@@ -82,7 +86,7 @@ const EventListContainer = styled.div`
   height: 100%;
   margin: auto;
   padding: 0.8rem 1.6rem 0.1rem 1.6rem;
-  gap: 1.6rem;
+  gap: 1.2rem;
 `;
 
 const ErrorMessage = styled.div`
@@ -91,8 +95,7 @@ const ErrorMessage = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.6rem;
-  font-size: ${({theme}) => theme.sizes.m};
-  color: ${({theme}) => theme.colors.neutral1};
+  font-size: ${props => props.theme.sizes.m};
 `;
 
 export default EventList;

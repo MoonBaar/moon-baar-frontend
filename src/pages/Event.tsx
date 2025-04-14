@@ -1,24 +1,20 @@
 import styled from 'styled-components';
 import EventList from '@/components/Event/EventList';
-import {useLocation} from 'react-router-dom';
-import {useEffect, useState} from 'react';
-import throttle from '@/utils/throttle';
-import {useEventFilterStore, useScrollStore} from '@/store/eventList';
+import {useState} from 'react';
+import {useEventFilterStore} from '@/store/eventList';
 import FilterItem from '@/components/Event/FilterItem';
 import filter from '@/assets/img/filter.png';
 import Layout from '@/components/common/Layout';
-import Header from '@/components/Header/Header';
+import Header from '@/components/common/Header/Header';
 import Footer from '@/components/common/Footer';
 import {
   categoryOption,
   districtOption,
   isFreeOption,
 } from '@/assets/data/filter';
-import {searchHeaderHeight} from '@/assets/data/constant';
+import {searchHeight} from '@/assets/data/constant';
 
 function Event() {
-  const {scrollY, setScrollY} = useScrollStore();
-  const location = useLocation();
   const {
     category,
     isFree,
@@ -30,45 +26,10 @@ function Event() {
   } = useEventFilterStore();
   const [isOpen, setIsOpen] = useState(false);
 
-  // 새로고침 시 스크롤 위치 초기화
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      window.scrollTo({top: 0});
-      setScrollY(0);
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  // 스크롤 저장
-  useEffect(() => {
-    const throttledSave = throttle(() => {
-      const currentY = window.scrollY;
-      setScrollY(currentY);
-    }, 300);
-
-    window.addEventListener('scroll', throttledSave);
-
-    return () => {
-      window.removeEventListener('scroll', throttledSave);
-    };
-  }, [location.pathname, setScrollY]);
-
-  // 스크롤 복원
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({top: scrollY, behavior: 'auto'});
-    }, 0);
-  }, []);
-
   return (
     <>
       <Header />
-      <Layout headerHeight={searchHeaderHeight}>
+      <Layout headerHeight={searchHeight}>
         <ListHeader>
           <ListHeaderWrap>
             <Title>문화행사</Title>
@@ -137,11 +98,10 @@ const ListHeaderWrap = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div`
+export const Title = styled.h2`
   font-size: ${props => props.theme.sizes.l};
   font-weight: bold;
   line-height: 2.8rem;
-  color: ${props => props.theme.colors.neutral1};
   text-align: center;
 `;
 

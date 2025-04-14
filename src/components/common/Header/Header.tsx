@@ -4,16 +4,17 @@ import search from '@/assets/img/search.svg';
 import {useEventFilterStore} from '@/store/eventList';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
   const {query, setQuery} = useEventFilterStore();
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = useRef(location.pathname);
 
   useEffect(() => {
-    if (query) {
+    if (currentPath.current === '/event' && query) {
       setInputValue(query);
     }
   }, []);
@@ -25,6 +26,9 @@ function Header() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSearch();
+    if (currentPath.current !== '/event') {
+      navigate('/event');
+    }
   };
 
   return (
@@ -36,17 +40,17 @@ function Header() {
           <img src={profile} alt='profile' />
         </User>
       </TitleWrap>
-      {currentPath.current === '/event' && (
+      {(currentPath.current === '/' || currentPath.current === '/event') && (
         <SearchBarWrap onSubmit={handleSubmit}>
           <SearchBar>
             <img src={search} alt='search' onClick={handleSearch} />
             <InputWrap
               type='text'
-              placeholder='행사 검색'
+              placeholder='진행 중인 행사를 검색해보세요'
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
             />
-            {query && (
+            {currentPath.current === '/event' && query && (
               <CloseButton
                 src={close}
                 alt='close'
@@ -63,13 +67,12 @@ function Header() {
   );
 }
 
-const HeaderContainer = styled.header`
+export const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   max-width: 44rem;
   width: 100%;
   background-color: white;
-  color: ${props => props.theme.colors.neutral1};
   box-shadow:
     0px 4px 6px -1px rgba(0, 0, 0, 0.1),
     0px 2px 4px -2px rgba(0, 0, 0, 0.1);

@@ -1,9 +1,10 @@
-import Achievement from '@/components/Achievement';
-import BadgeItem from '@/components/BadgeItem';
-import Footer from '@/components/common/Footer';
-import Header from '@/components/Header/Header';
 import {useState} from 'react';
 import styled from 'styled-components';
+import Achievement from '@/components/common/Achievement';
+import BadgeItem from '@/components/Badge/BadgeItem';
+import Footer from '@/components/common/Footer';
+import Header from '@/components/common/Header/Header';
+import Layout from '@/components/common/Layout';
 
 const dummy = [
   {
@@ -92,8 +93,12 @@ function Badge() {
   return (
     <>
       <Header />
-      <main>
+      <Layout headerHeight='6.5rem'>
         <Box style={{paddingBottom: 0}}>
+          <Label>다음 목표</Label>
+          <Achievement data={achieved} />
+        </Box>
+        <Box>
           <Label>나의 배지</Label>
           <BadgeListWrap>
             {list.map(item => (
@@ -106,11 +111,7 @@ function Badge() {
             ))}
           </BadgeListWrap>
         </Box>
-        <Box>
-          <Label>다음 목표</Label>
-          <Achievement data={achieved} />
-        </Box>
-      </main>
+      </Layout>
       <Footer />
     </>
   );
@@ -124,12 +125,14 @@ const Label = styled.h2`
 
 const Box = styled.div`
   padding: 3rem;
+  width: 100%;
 `;
 
 const BadgeListWrap = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1.6rem;
+  row-gap: 1.5rem;
 `;
 
 export default Badge;

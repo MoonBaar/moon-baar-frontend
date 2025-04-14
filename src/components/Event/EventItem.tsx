@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import location from '@/assets/img/location.svg';
+import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
-import {EventProps} from '@/assets/types/eventListType';
+import {useNavigate} from 'react-router-dom';
+import {EventProps} from '@/assets/types/event';
 
 function EventItem({
   id,
@@ -12,11 +13,13 @@ function EventItem({
   startDate,
   endDate,
   isFree,
-  imageUrl,
+  mainImg,
   latitude,
   longitude,
-  isLiked,
+  isVisited,
 }: EventProps) {
+  const navigate = useNavigate();
+
   const dateFormat = () => {
     const startDateFormatted = startDate.split('T')[0];
     const endDateFormatted = endDate.split('T')[0];
@@ -28,8 +31,8 @@ function EventItem({
   };
 
   return (
-    <EventItemContainer>
-      <MainImage src={imageUrl} alt='mainImage' />
+    <EventItemContainer onClick={() => navigate(`/event/${id}`)}>
+      <MainImage src={mainImg} alt='mainImage' />
       <EventContent>
         <FilterList>
           <FilterItem>{category}</FilterItem>
@@ -37,7 +40,7 @@ function EventItem({
         </FilterList>
         <EventTitle>{title}</EventTitle>
         <EventPlace>
-          <img src={location} alt='location' />
+          <Location width='14px' height='14px' />
           <div>{place}</div>
         </EventPlace>
         <EventDate>
@@ -96,7 +99,6 @@ const EventTitle = styled.div`
   font-size: ${props => props.theme.sizes.m};
   font-weight: 500;
   line-height: 2.4rem;
-  color: ${props => props.theme.colors.neutral1};
 `;
 
 const EventPlace = styled.div`
@@ -111,7 +113,7 @@ const EventPlace = styled.div`
 const EventDate = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   font-size: ${props => props.theme.sizes.xs};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
