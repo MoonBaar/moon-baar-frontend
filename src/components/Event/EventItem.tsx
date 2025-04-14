@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
-import {EventProps} from '@/assets/types/event';
 import {useNavigate} from 'react-router-dom';
+import {EventProps} from '@/assets/types/event';
 
 function EventItem({
   id,
@@ -16,7 +16,7 @@ function EventItem({
   mainImg,
   latitude,
   longitude,
-  isLiked,
+  isVisited,
 }: EventProps) {
   const navigate = useNavigate();
 
@@ -99,7 +99,6 @@ const EventTitle = styled.div`
   font-size: ${props => props.theme.sizes.m};
   font-weight: 500;
   line-height: 2.4rem;
-  color: ${props => props.theme.colors.neutral1};
 `;
 
 const EventPlace = styled.div`
@@ -114,7 +113,7 @@ const EventPlace = styled.div`
 const EventDate = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   font-size: ${props => props.theme.sizes.xs};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
