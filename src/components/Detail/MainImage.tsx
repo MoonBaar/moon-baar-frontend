@@ -2,15 +2,35 @@ import styled from 'styled-components';
 import {ReactComponent as Share} from '@/assets/img/share.svg';
 import {ReactComponent as Like} from '@/assets/img/like.svg';
 import {useState} from 'react';
+import {delLike, postLike} from '@/apis/api/like';
 
 interface ImageProps {
+  id: number;
   imageUrl: string;
   isLiked: boolean;
   category: string;
 }
 
-function MainImage({imageUrl, isLiked, category}: ImageProps) {
+function MainImage({id, imageUrl, isLiked, category}: ImageProps) {
   const [like, setLike] = useState<boolean>(isLiked);
+
+  const handleClick = async () => {
+    if (like) {
+      try {
+        await delLike(id);
+        setLike(false);
+      } catch (error) {
+        console.log('delete like fail: ', error);
+      }
+    } else {
+      try {
+        await postLike(id);
+        setLike(true);
+      } catch (error) {
+        console.log('post like fail: ', error);
+      }
+    }
+  };
 
   return (
     <Container $img={imageUrl}>
@@ -18,7 +38,7 @@ function MainImage({imageUrl, isLiked, category}: ImageProps) {
         <ButtonWrap>
           <Share />
         </ButtonWrap>
-        <ButtonWrap onClick={() => setLike(prev => !prev)}>
+        <ButtonWrap onClick={() => handleClick()}>
           {like ? (
             <Like stroke='#DB2777' fill='#DB2777' />
           ) : (
