@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import styled from 'styled-components';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import {useInView} from 'react-intersection-observer';
@@ -8,7 +8,6 @@ import EventItem from '../Event/EventItem';
 import EventItemSkeleton from '../Event/EventItemSkeleton';
 
 function LikeList() {
-  const [list, setList] = useState<EventListProps>();
   const [ref, inView] = useInView();
 
   const getList = async ({pageParam}: QueryFunctionContext) => {
@@ -16,7 +15,7 @@ function LikeList() {
     return data;
   };
 
-  const {data, isFetchingNextPage, fetchNextPage, hasNextPage, status} =
+  const {data, isFetchingNextPage, fetchNextPage, status} =
     useInfiniteQuery<EventListProps>({
       queryKey: ['events'],
       queryFn: getList,
