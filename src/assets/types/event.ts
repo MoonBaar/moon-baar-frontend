@@ -1,16 +1,14 @@
 export interface EventProps {
   id: number;
   title: string;
-  category: string;
-  district: string;
+  category?: string;
+  district?: string;
   place: string;
   startDate: string;
   endDate: string;
-  isFree: boolean;
+  isFree?: boolean;
   mainImg: string;
-  latitude: number;
-  longitude: number;
-  isLiked: boolean;
+  isLiked?: boolean;
   isVisited?: boolean;
   visitCount?: number;
   likeCount?: number;
@@ -23,6 +21,9 @@ export interface EventDetailProps extends EventProps {
   etcDesc: string;
   orgName: string;
   orgLink: string;
+  category: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface EventListProps {

@@ -4,25 +4,16 @@ import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
 
-function EventItem({
-  id,
-  title,
-  category,
-  district,
-  place,
-  startDate,
-  endDate,
-  isFree,
-  mainImg,
-  latitude,
-  longitude,
-  isVisited,
-}: EventProps) {
+interface ItemProps {
+  data: EventProps;
+}
+
+function EventItem({data}: ItemProps) {
   const navigate = useNavigate();
 
   const dateFormat = () => {
-    const startDateFormatted = startDate.split('T')[0];
-    const endDateFormatted = endDate.split('T')[0];
+    const startDateFormatted = data.startDate.split('T')[0];
+    const endDateFormatted = data.endDate.split('T')[0];
 
     if (startDateFormatted === endDateFormatted) {
       return startDateFormatted;
@@ -31,23 +22,31 @@ function EventItem({
   };
 
   return (
-    <EventItemContainer onClick={() => navigate(`/event/${id}`)}>
-      <MainImage src={mainImg} alt='mainImage' />
+    <EventItemContainer onClick={() => navigate(`/event/${data.id}`)}>
+      <MainImage
+        src={data.mainImg}
+        alt='mainImage'
+        $isSimple={data.category === undefined}
+      />
       <EventContent>
-        <FilterList>
-          <FilterItem>{category}</FilterItem>
-          <FilterItem>{isFree === true ? '무료' : '유료'}</FilterItem>
-        </FilterList>
-        <EventTitle>{title}</EventTitle>
+        {data.category && (
+          <FilterList>
+            <FilterItem>{data.category}</FilterItem>
+            <FilterItem>{data.isFree === true ? '무료' : '유료'}</FilterItem>
+          </FilterList>
+        )}
+        <EventTitle>{data.title}</EventTitle>
         <EventPlace>
           <Location width='14px' height='14px' />
-          <div>{place}</div>
+          <div>{data.place}</div>
         </EventPlace>
         <EventDate>
           <img src={date} alt='date' />
           <div>{dateFormat()}</div>
         </EventDate>
-        <CheckInButton>방문하기</CheckInButton>
+        {data.isVisited !== undefined && (
+          <CheckInButton>방문하기</CheckInButton>
+        )}
       </EventContent>
     </EventItemContainer>
   );
@@ -59,14 +58,14 @@ const EventItemContainer = styled.div`
   gap: 1.2rem;
   width: 100%;
   height: fit-content;
-  padding-bottom: 1.2rem;
+  padding: 1.2rem 0;
   border-bottom: 0.8px solid ${props => props.theme.colors.neutral4};
   cursor: pointer;
 `;
 
-const MainImage = styled.img`
-  width: 10rem;
-  height: 13rem;
+const MainImage = styled.img<{$isSimple: boolean}>`
+  width: ${props => (props.$isSimple ? '8rem' : '10rem')};
+  height: ${props => (props.$isSimple ? '10rem' : '13rem')};
   background-color: ${props => props.theme.colors.neutral5};
   border-radius: 0.4rem;
   flex-shrink: 0;

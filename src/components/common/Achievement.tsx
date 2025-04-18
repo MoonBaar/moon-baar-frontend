@@ -1,28 +1,24 @@
 import styled from 'styled-components';
-import {AchievedProps} from '@/pages/Badge';
+import {AchievementProps} from '@/assets/types/achievement';
 
-interface AchievementProps {
-  data: AchievedProps;
-}
-
-function Achievement({data}: AchievementProps) {
+function Achievement({subtitle, type, total, color, data}: AchievementProps) {
   const getRate = () => {
-    return Number((data.current / data.total).toFixed(1));
+    return Number((data.percentage / 100).toFixed(1));
   };
 
   return (
     <AchievementBox>
       <ContentBox>
         <TitleWrap>
-          {data.title}
-          {data.subtitle && <p>{data.subtitle}</p>}
+          {data.name}
+          {subtitle && <p>{subtitle}</p>}
         </TitleWrap>
         <Achieved>
-          {data.type ? `${data.current}/${data.total}` : `${data.current}회`}
+          {type ? `${data.count}/${total}` : `${data.count}회`}
         </Achieved>
       </ContentBox>
       <Graph>
-        <AchievedGraph $color={data.color} $rate={() => getRate()} />
+        <AchievedGraph $color={color} $rate={() => getRate()} />
       </Graph>
     </AchievementBox>
   );

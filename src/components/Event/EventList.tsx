@@ -65,7 +65,7 @@ function EventList() {
         </ErrorMessage>
       )}
       {data?.pages.map(page =>
-        page.events.map(event => <EventItem key={event.id} {...event} />),
+        page.events.map(event => <EventItem key={event.id} data={event} />),
       )}
       <div ref={ref} style={{height: '1px'}} />
       {isFetchingNextPage && (
@@ -85,7 +85,7 @@ const EventListContainer = styled.div`
   width: 100%;
   height: 100%;
   margin: auto;
-  padding: 0.8rem 1.6rem 0.1rem 1.6rem;
+  padding: 0 1.6rem 0.1rem 1.6rem;
   gap: 1.2rem;
 `;
 
