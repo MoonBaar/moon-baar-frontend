@@ -45,19 +45,25 @@ function EventItem({
 
   return (
     <EventItemContainer onClick={handleOnClick}>
-      <MainImage src={data.mainImg} alt='mainImage' />
+      <MainImage
+        src={data.mainImg}
+        alt='mainImage'
+        $isSimple={data.category === undefined}
+      />
       <EventContent>
-        <FilterList>
-          <FilterItem $isFilter={categoryFilter !== null}>
-            {data.category}
-          </FilterItem>
-          <FilterItem $isFilter={isFreeFilter !== null}>
-            {data.isFree === true ? '무료' : '유료'}
-          </FilterItem>
-          <FilterItem $isFilter={districtFilter !== null}>
-            {data.district}
-          </FilterItem>
-        </FilterList>
+        {data.category && (
+          <FilterList>
+            <FilterItem $isFilter={categoryFilter !== null}>
+              {data.category}
+            </FilterItem>
+            <FilterItem $isFilter={isFreeFilter !== null}>
+              {data.isFree === true ? '무료' : '유료'}
+            </FilterItem>
+            <FilterItem $isFilter={districtFilter !== null}>
+              {data.district}
+            </FilterItem>
+          </FilterList>
+        )}
         <EventTitle>{data.title}</EventTitle>
         <EventPlace>
           <Location width='14px' height='14px' />
@@ -67,7 +73,7 @@ function EventItem({
           <img src={date} alt='date' />
           <div>{dateFormat()}</div>
         </EventDate>
-        {data.isVisited ? (
+        {data.isVisited !== undefined && data.isVisited ? (
           <CheckInButton $checkIn={false}>방문완료</CheckInButton>
         ) : (
           <CheckInButton $checkIn={true}>방문하기</CheckInButton>
@@ -88,9 +94,9 @@ const EventItemContainer = styled.div`
   cursor: pointer;
 `;
 
-const MainImage = styled.img`
-  width: 10rem;
-  height: 13rem;
+const MainImage = styled.img<{$isSimple: boolean}>`
+  width: ${props => (props.$isSimple ? '8rem' : '10rem')};
+  height: ${props => (props.$isSimple ? '10rem' : '13rem')};
   background-color: ${props => props.theme.colors.neutral5};
   border-radius: 0.4rem;
   flex-shrink: 0;
