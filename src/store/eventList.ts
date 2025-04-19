@@ -5,42 +5,59 @@ interface ScrollState {
   setScrollY: (y: number) => void;
 }
 
-interface FilterState {
-  query: string | null;
-  category: string | null;
-  isFree: string | null;
-  district: string | null;
-  setQuery: (val: string | null) => void;
-  setCategory: (val: string | null) => void;
-  setIsFree: (val: string | null) => void;
-  setDistrict: (val: string | null) => void;
-  resetCategory: () => void;
-  resetIsFree: () => void;
-  resetDistrict: () => void;
-  resetAllFilters: () => void;
-}
-
 export const useScrollStore = create<ScrollState>(set => ({
   scrollY: 0,
   setScrollY: y => set({scrollY: y}),
 }));
 
+interface OpenState {
+  isOpen: boolean;
+  toggleIsOpen: () => void;
+}
+
+export const useIsOpenStore = create<OpenState>(set => ({
+  isOpen: false,
+  toggleIsOpen: () => set(state => ({isOpen: !state.isOpen})),
+}));
+
+interface FilterState {
+  query: string | null;
+  categoryFilter: {id: number; value: string} | null;
+  isFreeFilter: {id: number; value: string} | null;
+  districtFilter: {id: number; value: string} | null;
+  startDate: string | null;
+  setQuery: (val: string | null) => void;
+  setCategoryFilter: (val: {id: number; value: string} | null) => void;
+  setIsFreeFilter: (val: {id: number; value: string} | null) => void;
+  setDistrictFilter: (val: {id: number; value: string} | null) => void;
+  setStartDate: (date: string | null) => void;
+  resetCategoryFilter: () => void;
+  resetIsFreeFilter: () => void;
+  resetDistrictFilter: () => void;
+  resetStartDate: () => void;
+  resetAllFilters: () => void;
+}
+
 export const useEventFilterStore = create<FilterState>(set => ({
   query: null,
-  category: null,
-  isFree: null,
-  district: null,
+  categoryFilter: null,
+  isFreeFilter: null,
+  districtFilter: null,
+  startDate: null,
   setQuery: val => set({query: val}),
-  setCategory: val => set({category: val}),
-  setIsFree: val => set({isFree: val}),
-  setDistrict: val => set({district: val}),
-  resetCategory: () => set({category: null}),
-  resetIsFree: () => set({isFree: null}),
-  resetDistrict: () => set({district: null}),
+  setCategoryFilter: val => set({categoryFilter: val}),
+  setIsFreeFilter: val => set({isFreeFilter: val}),
+  setDistrictFilter: val => set({districtFilter: val}),
+  setStartDate: val => set({startDate: val}),
+  resetCategoryFilter: () => set({categoryFilter: null}),
+  resetIsFreeFilter: () => set({isFreeFilter: null}),
+  resetDistrictFilter: () => set({districtFilter: null}),
+  resetStartDate: () => set({startDate: null}),
   resetAllFilters: () =>
     set({
-      category: null,
-      isFree: null,
-      district: null,
+      categoryFilter: null,
+      isFreeFilter: null,
+      districtFilter: null,
+      startDate: null,
     }),
 }));

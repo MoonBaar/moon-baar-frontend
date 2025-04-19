@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {getEventList} from '@/apis/api/event';
 import EventItem from './EventItem';
 import {useInView} from 'react-intersection-observer';
@@ -10,22 +10,33 @@ import {EventListProps} from '@/assets/types/event';
 import {useScrollRestore} from '@/hooks/useScrollRestore';
 
 function EventList() {
-  const [category, setCategory] = useState<number | null>(null);
-  const [isFree, setIsFree] = useState<boolean | null>(null);
-  const {query, district} = useEventFilterStore();
+  const {query, categoryFilter, isFreeFilter, districtFilter, startDate} =
+    useEventFilterStore();
+  const categoryId = categoryFilter?.id || null;
+  const isFree = isFreeFilter ? (isFreeFilter?.id === 1 ? true : false) : null;
+  const districtId = districtFilter?.id || null;
   const {ref, inView} = useInView();
   const listRef = useRef<HTMLDivElement>(null);
   const {scrollY, setScrollY} = useScrollStore();
 
   const {data, isFetchingNextPage, fetchNextPage, hasNextPage, status} =
     useInfiniteQuery<EventListProps>({
-      queryKey: [query, 'events', category, isFree],
+      queryKey: [
+        query,
+        'events',
+        categoryFilter,
+        isFreeFilter,
+        districtFilter,
+        startDate,
+      ],
       queryFn: async ({pageParam}: QueryFunctionContext) => {
         return await getEventList({
           query,
           page: pageParam as number,
-          category,
+          categoryId,
           isFree,
+          districtId,
+          startDate,
         });
       },
       getNextPageParam: lastPage =>
@@ -53,7 +64,7 @@ function EventList() {
     <EventListContainer ref={listRef}>
       {status === 'pending' && (
         <>
-          {Array.from({length: 10}).map((_, i) => (
+          {Array.from({length: 5}).map((_, i) => (
             <EventItemSkeleton key={i} />
           ))}
         </>
@@ -64,10 +75,16 @@ function EventList() {
           <div>다시 시도해 주세요</div>
         </ErrorMessage>
       )}
-      {data?.pages.map(page =>
-        page.events.map(event => <EventItem key={event.id} data={event} />),
+      {data?.pages.flatMap(page => page.events).length === 0 ? (
+        <ErrorMessage>일치하는 행사가 없습니다</ErrorMessage>
+      ) : (
+        <>
+          {data?.pages.map(page =>
+            page.events.map(event => <EventItem key={event.id} data={event} />),
+          )}
+          <div ref={ref} style={{height: '1px'}} />
+        </>
       )}
-      <div ref={ref} style={{height: '1px'}} />
       {isFetchingNextPage && (
         <>
           {Array.from({length: 5}).map((_, i) => (

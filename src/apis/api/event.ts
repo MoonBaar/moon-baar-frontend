@@ -2,20 +2,24 @@ import {EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 
 interface EventListParams {
-  query?: string | null;
+  query: string | null;
   page: number;
-  category?: number | null;
-  isFree?: boolean | null;
+  categoryId: number | null;
+  isFree: boolean | null;
+  districtId: number | null;
+  startDate: string | null;
 }
 
 export const getEventList = async ({
   query,
   page,
-  category,
+  categoryId,
   isFree,
+  districtId,
+  startDate,
 }: EventListParams): Promise<EventListProps> => {
   const {data} = await baseAPI.get('/events', {
-    params: {query, page, category, isFree},
+    params: {query, page, categoryId, isFree, districtId, startDate},
   });
 
   return data;

@@ -45,7 +45,7 @@ const MainImage = styled.img`
 const EventContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
   gap: 0.4rem;
 `;
 
@@ -68,7 +68,7 @@ const EventDate = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: ${props => props.theme.sizes.xs};
+  font-size: ${props => props.theme.sizes.s};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
 `;

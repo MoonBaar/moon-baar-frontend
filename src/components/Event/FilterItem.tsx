@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
 import close from '@/assets/img/close.svg';
 import {useEventFilterStore} from '@/store/eventList';
@@ -6,9 +6,10 @@ import dropdown from '@/assets/img/dropdown.png';
 
 interface FilterButtonProps {
   label: string;
-  options: string[];
-  selectedValue: string | null;
-  onSelect: (option: string) => void;
+  options: {id: number; value: string}[];
+  selectedValue: {id: number; value: string} | null;
+  onSelect: (option: {id: number; value: string}) => void;
+  setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function FilterItem({
@@ -16,45 +17,36 @@ function FilterItem({
   options,
   selectedValue,
   onSelect,
+  setOpenCalendar,
 }: FilterButtonProps) {
-  const {resetCategory, resetIsFree, resetDistrict} = useEventFilterStore();
+  const {resetCategoryFilter, resetIsFreeFilter, resetDistrictFilter} =
+    useEventFilterStore();
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (ref.current && !ref.current.contains(event.target as Node)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleClose = (e: React.MouseEvent) => {
     setIsOpen(prev => !prev);
+    setOpenCalendar(false);
     e.stopPropagation();
   };
 
   const handleReset = (e: React.MouseEvent) => {
     setIsOpen(false);
     if (label === '카테고리') {
-      resetCategory();
+      resetCategoryFilter();
     } else if (label === '유/무료') {
-      resetIsFree();
+      resetIsFreeFilter();
     } else if (label === '자치구') {
-      resetDistrict();
+      resetDistrictFilter();
     }
     e.stopPropagation();
   };
 
   return (
     <>
-      <FilterItemContainer ref={ref}>
+      <FilterItemContainer>
         {selectedValue ? (
           <TriggerButton onClick={handleClose} $isSelectedValue={true}>
-            {selectedValue}
+            {selectedValue.value}
             <CloseImage src={close} alt='close' onClick={handleReset} />
           </TriggerButton>
         ) : (
@@ -64,36 +56,38 @@ function FilterItem({
           </TriggerButton>
         )}
         <FilterOptionList $isOpen={isOpen}>
-          {options.map(option => (
+          {options.map((option, idx) => (
             <FilterOption
-              key={option}
+              key={idx}
               $selected={option === selectedValue}
               onClick={() => {
                 setIsOpen(false);
                 onSelect(option);
               }}
             >
-              {option}
+              {option.value}
             </FilterOption>
           ))}
         </FilterOptionList>
       </FilterItemContainer>
+      {isOpen && <Overlay onClick={() => setIsOpen(false)} />}
     </>
   );
 }
 
-const FilterItemContainer = styled.div`
+export const FilterItemContainer = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-const TriggerButton = styled.button<{$isSelectedValue: boolean}>`
+export const TriggerButton = styled.button<{$isSelectedValue: boolean}>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.48rem 1.2rem;
   width: 100%;
   max-width: max-content;
+  height: 3rem;
   font-size: ${props => props.theme.sizes.s};
   background-color: ${props =>
     props.$isSelectedValue
@@ -103,7 +97,7 @@ const TriggerButton = styled.button<{$isSelectedValue: boolean}>`
   border-radius: 1.6rem;
 `;
 
-const CloseImage = styled.img`
+export const CloseImage = styled.img`
   width: 0.9rem;
   height: 0.9rem;
   margin-left: 0.5rem;
@@ -111,9 +105,9 @@ const CloseImage = styled.img`
     brightness(92%) contrast(90%);
 `;
 
-const DropDownImage = styled.img`
-  width: 1.2rem;
-  height: 1.2rem;
+export const DropDownImage = styled.img`
+  width: 1.1rem;
+  height: 1.1rem;
   margin: 0.2rem 0 0 0.5rem;
   filter: invert(58%) sepia(30%) saturate(442%) hue-rotate(111deg)
     brightness(92%) contrast(90%);
@@ -122,8 +116,6 @@ const DropDownImage = styled.img`
 const FilterOptionList = styled.ul<{$isOpen: boolean}>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: absolute;
   top: 3.2rem;
   left: 50%;
@@ -165,6 +157,16 @@ const FilterOption = styled.li<{$selected: boolean}>`
     color: ${props => props.theme.colors.primary};
     background-color: ${props => props.theme.colors.secondary};
   }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background: transparent;
 `;
 
 export default FilterItem;
