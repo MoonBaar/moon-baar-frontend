@@ -89,7 +89,7 @@ const EventItemContainer = styled.div`
   gap: 1.2rem;
   width: 100%;
   height: fit-content;
-  padding-bottom: 1.2rem;
+  padding: 1.2rem 0;
   border-bottom: 0.8px solid ${props => props.theme.colors.neutral4};
   cursor: pointer;
 `;

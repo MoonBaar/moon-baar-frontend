@@ -2,11 +2,11 @@ export interface EventProps {
   id: number;
   title: string;
   category?: string;
-  district: string;
+  district?: string;
   place: string;
   startDate: string;
   endDate: string;
-  isFree: boolean;
+  isFree?: boolean;
   mainImg: string;
   latitude?: number;
   longitude?: number;

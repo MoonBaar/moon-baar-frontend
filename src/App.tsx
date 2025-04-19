@@ -6,6 +6,7 @@ import Home from '@/pages/Home';
 import Event from '@/pages/Event';
 import Badge from '@/pages/Badge';
 import Detail from '@/pages/Detail';
+import Statistics from '@/pages/Statistics';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/event' element={<Event />} />
         <Route path='/event/:id' element={<Detail />} />
         <Route path='/badge' element={<Badge />} />
+        <Route path='/statistics' element={<Statistics />} />
       </Routes>
     </ThemeProvider>
   );

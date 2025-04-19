@@ -8,9 +8,10 @@ import MainImage from '@/components/Detail/MainImage';
 import VisitedStats from '@/components/Detail/VisitedStats';
 import DetailHeader from '@/components/common/Header/DetailHeader';
 import Layout from '@/components/common/Layout';
+import {basicHeight, emptyHeight} from '@/assets/data/constant';
 
 function Detail() {
-  const id = useParams().id;
+  const id = useParams().id || '0';
   const [info, setInfo] = useState<EventDetailProps>();
 
   useEffect(() => {
@@ -30,8 +31,9 @@ function Detail() {
     <>
       <DetailHeader name='행사 상세' />
       {info && (
-        <Layout headerHeight='6.5rem' footerHeight='0'>
+        <Layout headerHeight={basicHeight} footerHeight={emptyHeight}>
           <MainImage
+            id={parseInt(id)}
             imageUrl={info.mainImg}
             isLiked={false}
             category={info.category}

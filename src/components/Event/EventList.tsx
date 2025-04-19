@@ -108,7 +108,9 @@ const EventListContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0.8rem 1.6rem 0.1rem 1.6rem;
+  height: 100%;
+  margin: auto;
+  padding: 0 1.6rem 0.1rem 1.6rem;
   gap: 1.2rem;
 `;
 
@@ -117,7 +119,6 @@ const ErrorMessage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 8rem;
   gap: 0.6rem;
   font-size: ${props => props.theme.sizes.m};
 `;
