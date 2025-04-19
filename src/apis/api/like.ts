@@ -17,3 +17,14 @@ export const delLike = async (id: number) => {
     throw error;
   }
 };
+
+export const getLikeList = async (page: number) => {
+  try {
+    const {data} = await baseAPI.get('/users/me/likes', {
+      params: {page, size: 10},
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

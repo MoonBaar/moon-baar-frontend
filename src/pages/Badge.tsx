@@ -5,6 +5,8 @@ import BadgeItem from '@/components/Badge/BadgeItem';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header/Header';
 import Layout from '@/components/common/Layout';
+import {basicHeight} from '@/assets/data/constant';
+import {AchievedProps} from '@/assets/types/achievement';
 
 const dummy = [
   {
@@ -70,33 +72,27 @@ export interface BadgeProps {
   img: string;
 }
 
-export interface AchievedProps {
-  title: string;
-  subtitle?: string;
-  total: number;
-  current: number;
-  type?: string;
-  color: string;
-}
-
 function Badge() {
   const [list, setList] = useState<BadgeProps[]>(dummy);
   const [achieved, setAchieved] = useState<AchievedProps>({
-    title: '서울 완전 정복',
-    subtitle: '서울 25개 구 모두 방문하기',
-    total: 25,
-    current: 14,
-    type: 'goal',
-    color: '#5D9D8A',
+    name: '서울 완전 정복',
+    count: 14,
+    percentage: 70,
   });
 
   return (
     <>
       <Header />
-      <Layout headerHeight='6.5rem'>
+      <Layout headerHeight={basicHeight}>
         <Box style={{paddingBottom: 0}}>
           <Label>다음 목표</Label>
-          <Achievement data={achieved} />
+          <Achievement
+            subtitle='서울 25개 구 모두 방문하기'
+            total={25}
+            type='goal'
+            color='#5D9D8A'
+            data={achieved}
+          />
         </Box>
         <Box>
           <Label>나의 배지</Label>
