@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import location from '@/assets/img/location.svg';
+import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
 
 function SimpleEventItem() {
@@ -11,7 +11,7 @@ function SimpleEventItem() {
           [노원문화원] 2025 노원문화원 국악 예술단 정기공연
         </EventTitle>
         <EventPlace>
-          <img src={location} alt='location' />
+          <Location width='14px' height='14px' />
           <div>노원문화예술회관 대공연장</div>
         </EventPlace>
         <EventDate>
@@ -45,7 +45,7 @@ const MainImage = styled.img`
 const EventContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
   gap: 0.4rem;
 `;
 
@@ -68,7 +68,7 @@ const EventDate = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: ${props => props.theme.sizes.xs};
+  font-size: ${props => props.theme.sizes.s};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
 `;

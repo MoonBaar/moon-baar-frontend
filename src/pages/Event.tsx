@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import EventList from '@/components/Event/EventList';
-import {useState} from 'react';
-import {useEventFilterStore} from '@/store/eventList';
-import FilterItem from '@/components/Event/FilterItem';
+import {useEventFilterStore, useIsOpenStore} from '@/store/eventList';
+import FilterItem, {
+  CloseImage,
+  DropDownImage,
+  FilterItemContainer,
+  TriggerButton,
+} from '@/components/Event/FilterItem';
 import filter from '@/assets/img/filter.png';
 import Layout from '@/components/common/Layout';
 import Header from '@/components/common/Header/Header';
@@ -13,71 +17,127 @@ import {
   isFreeOption,
 } from '@/assets/data/filter';
 import {searchHeight} from '@/assets/data/constant';
+import dropdown from '@/assets/img/dropdown.png';
+import calendar from '@/assets/img/calendar.svg';
+import {useState} from 'react';
+import CalendarFilter from '@/components/Event/CalendarFilter';
+import close from '@/assets/img/close.svg';
 
 function Event() {
   const {
-    category,
-    isFree,
-    district,
-    setCategory,
-    setIsFree,
-    setDistrict,
+    categoryFilter,
+    isFreeFilter,
+    districtFilter,
+    startDate,
+    setCategoryFilter,
+    setIsFreeFilter,
+    setDistrictFilter,
+    setStartDate,
+    resetStartDate,
     resetAllFilters,
   } = useEventFilterStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const {isOpen, toggleIsOpen} = useIsOpenStore();
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const handleReset = (e: React.MouseEvent) => {
+    setOpenCalendar(false);
+    resetStartDate();
+    e.stopPropagation();
+  };
 
   return (
     <>
       <Header />
       <Layout headerHeight={searchHeight}>
-        <ListHeader>
-          <ListHeaderWrap>
-            <Title>문화행사</Title>
-            <FilterButtonContainer>
-              <FilterButton
-                onClick={() => setIsOpen(prev => !prev)}
-                $isOpen={isOpen}
+        <EventContainer>
+          <ListHeader>
+            <ListHeaderWrap>
+              <Title>문화행사</Title>
+              <FilterButtonContainer>
+                <FilterButton onClick={toggleIsOpen} $isOpen={isOpen}>
+                  필터
+                  <img src={filter} alt='filter' />
+                </FilterButton>
+              </FilterButtonContainer>
+            </ListHeaderWrap>
+            <FilterListContainer $isOpen={isOpen}>
+              <ResetButton
+                onClick={resetAllFilters}
+                $hasFilter={
+                  categoryFilter !== null ||
+                  isFreeFilter !== null ||
+                  districtFilter !== null
+                }
               >
-                필터
-                <img src={filter} alt='filter' />
-              </FilterButton>
-            </FilterButtonContainer>
-          </ListHeaderWrap>
-          <FilterListContainer $isOpen={isOpen}>
-            <ResetButton
-              onClick={resetAllFilters}
-              $hasFilter={
-                category !== null || isFree !== null || district !== null
-              }
-            >
-              전체
-            </ResetButton>
-            <FilterItem
-              label='카테고리'
-              options={categoryOption.map(option => option.value)}
-              selectedValue={category}
-              onSelect={setCategory}
-            />
-            <FilterItem
-              label='유/무료'
-              options={isFreeOption.map(option => option.value)}
-              selectedValue={isFree}
-              onSelect={setIsFree}
-            />
-            <FilterItem
-              label='자치구'
-              options={districtOption.map(option => option.value)}
-              selectedValue={district}
-              onSelect={setDistrict}
-            />
-          </FilterListContainer>
-        </ListHeader>
-        <EventList />
+                전체
+              </ResetButton>
+              <FilterItem
+                label='카테고리'
+                options={categoryOption.map(option => option)}
+                selectedValue={categoryFilter}
+                onSelect={setCategoryFilter}
+                setOpenCalendar={setOpenCalendar}
+              />
+              <FilterItem
+                label='유/무료'
+                options={isFreeOption.map(option => option)}
+                selectedValue={isFreeFilter}
+                onSelect={setIsFreeFilter}
+                setOpenCalendar={setOpenCalendar}
+              />
+              <FilterItem
+                label='자치구'
+                options={districtOption.map(option => option)}
+                selectedValue={districtFilter}
+                onSelect={setDistrictFilter}
+                setOpenCalendar={setOpenCalendar}
+              />
+              <FilterItemContainer>
+                <TriggerButton
+                  $isSelectedValue={startDate !== null}
+                  onClick={() => setOpenCalendar(prev => !prev)}
+                >
+                  {startDate ? (
+                    <>
+                      {startDate}
+                      <CloseImage
+                        src={close}
+                        alt='close'
+                        onClick={handleReset}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <CalendarImage src={calendar} alt='calendar' />
+                      <DropDownImage src={dropdown} alt='dropdown' />
+                    </>
+                  )}
+                </TriggerButton>
+                <CalendarOption $isOpen={openCalendar}>
+                  <CalendarFilter
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    setOpenCalendar={setOpenCalendar}
+                  />
+                </CalendarOption>
+              </FilterItemContainer>
+            </FilterListContainer>
+          </ListHeader>
+          <EventList />
+        </EventContainer>
       </Layout>
       <Footer />
     </>
   );
 }
+
+const EventContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: inherit;
+`;
 
 const ListHeader = styled.div`
   display: flex;
@@ -152,6 +212,26 @@ const ResetButton = styled.button<{$hasFilter: boolean}>`
       : props.theme.colors.secondary};
   color: ${props => props.theme.colors.primary};
   border-radius: 1.6rem;
+`;
+
+const CalendarImage = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 0.2rem;
+  filter: invert(58%) sepia(30%) saturate(442%) hue-rotate(111deg)
+    brightness(92%) contrast(90%);
+`;
+
+const CalendarOption = styled.div<{$isOpen: boolean}>`
+  width: 90%;
+  background-color: white;
+  position: relative;
+  top: 0.2rem;
+
+  max-height: ${({$isOpen}) => ($isOpen ? 'max-content' : '0')};
+  opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
+  transition: all 0.3s ease-in-out;
+  pointer-events: ${({$isOpen}) => ($isOpen ? 'auto' : 'none')};
 `;
 
 export default Event;

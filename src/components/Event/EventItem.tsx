@@ -4,6 +4,21 @@ import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
 
+interface EventItemProps extends EventProps {
+  categoryFilter: {
+    id: number;
+    value: string;
+  } | null;
+  isFreeFilter: {
+    id: number;
+    value: string;
+  } | null;
+  districtFilter: {
+    id: number;
+    value: string;
+  } | null;
+}
+
 function EventItem({
   id,
   title,
@@ -14,10 +29,11 @@ function EventItem({
   endDate,
   isFree,
   mainImg,
-  latitude,
-  longitude,
   isVisited,
-}: EventProps) {
+  categoryFilter,
+  isFreeFilter,
+  districtFilter,
+}: EventItemProps) {
   const navigate = useNavigate();
 
   const dateFormat = () => {
@@ -30,13 +46,25 @@ function EventItem({
     return `${startDateFormatted}~${endDateFormatted}`;
   };
 
+  const handleOnClick = (e: React.MouseEvent) => {
+    navigate(`/event/${id}`);
+    e.stopPropagation();
+  };
+
   return (
-    <EventItemContainer onClick={() => navigate(`/event/${id}`)}>
+    <EventItemContainer onClick={handleOnClick}>
       <MainImage src={mainImg} alt='mainImage' />
       <EventContent>
         <FilterList>
-          <FilterItem>{category}</FilterItem>
-          <FilterItem>{isFree === true ? '무료' : '유료'}</FilterItem>
+          <FilterItem $isFilter={categoryFilter !== null}>
+            {category}
+          </FilterItem>
+          <FilterItem $isFilter={isFreeFilter !== null}>
+            {isFree === true ? '무료' : '유료'}
+          </FilterItem>
+          <FilterItem $isFilter={districtFilter !== null}>
+            {district}
+          </FilterItem>
         </FilterList>
         <EventTitle>{title}</EventTitle>
         <EventPlace>
@@ -47,7 +75,11 @@ function EventItem({
           <img src={date} alt='date' />
           <div>{dateFormat()}</div>
         </EventDate>
-        <CheckInButton>방문하기</CheckInButton>
+        {isVisited ? (
+          <CheckInButton $checkIn={false}>방문완료</CheckInButton>
+        ) : (
+          <CheckInButton $checkIn={true}>방문하기</CheckInButton>
+        )}
       </EventContent>
     </EventItemContainer>
   );
@@ -81,16 +113,19 @@ const EventContent = styled.div`
 
 const FilterList = styled.div`
   display: flex;
-  gap: 0.8rem;
+  gap: 0.6rem;
 `;
 
-const FilterItem = styled.div`
+const FilterItem = styled.div<{$isFilter: boolean}>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.4rem 0.8rem;
   font-size: ${props => props.theme.sizes.xs};
-  background-color: ${props => props.theme.colors.neutral5};
+  background-color: ${props =>
+    props.$isFilter === true
+      ? props.theme.colors.secondary
+      : props.theme.colors.neutral5};
   color: ${props => props.theme.colors.primary};
   border-radius: 1.6rem;
 `;
@@ -104,7 +139,7 @@ const EventTitle = styled.div`
 const EventPlace = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.2rem;
   font-size: ${props => props.theme.sizes.s};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
@@ -114,19 +149,20 @@ const EventDate = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: ${props => props.theme.sizes.xs};
+  font-size: ${props => props.theme.sizes.s};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
 `;
 
-const CheckInButton = styled.button`
+const CheckInButton = styled.button<{$checkIn: boolean}>`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.4rem 1.2rem;
   font-size: ${props => props.theme.sizes.xs};
-  background-color: ${props => props.theme.colors.primary};
-  color: white;
+  background-color: ${props =>
+    props.$checkIn ? props.theme.colors.primary : props.theme.colors.neutral4};
+  color: ${props => (props.$checkIn ? 'white' : props.theme.colors.primary)};
   width: fit-content;
   border-radius: 1.6rem;
   margin: 0.4rem 0;
