@@ -4,7 +4,8 @@ import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
 
-interface EventItemProps extends EventProps {
+interface EventItemProps {
+  data: EventProps;
   categoryFilter: {
     id: number;
     value: string;
@@ -20,16 +21,7 @@ interface EventItemProps extends EventProps {
 }
 
 function EventItem({
-  id,
-  title,
-  category,
-  district,
-  place,
-  startDate,
-  endDate,
-  isFree,
-  mainImg,
-  isVisited,
+  data,
   categoryFilter,
   isFreeFilter,
   districtFilter,
@@ -37,8 +29,8 @@ function EventItem({
   const navigate = useNavigate();
 
   const dateFormat = () => {
-    const startDateFormatted = startDate.split('T')[0];
-    const endDateFormatted = endDate.split('T')[0];
+    const startDateFormatted = data.startDate.split('T')[0];
+    const endDateFormatted = data.endDate.split('T')[0];
 
     if (startDateFormatted === endDateFormatted) {
       return startDateFormatted;
@@ -47,35 +39,35 @@ function EventItem({
   };
 
   const handleOnClick = (e: React.MouseEvent) => {
-    navigate(`/event/${id}`);
+    navigate(`/event/${data.id}`);
     e.stopPropagation();
   };
 
   return (
     <EventItemContainer onClick={handleOnClick}>
-      <MainImage src={mainImg} alt='mainImage' />
+      <MainImage src={data.mainImg} alt='mainImage' />
       <EventContent>
         <FilterList>
           <FilterItem $isFilter={categoryFilter !== null}>
-            {category}
+            {data.category}
           </FilterItem>
           <FilterItem $isFilter={isFreeFilter !== null}>
-            {isFree === true ? '무료' : '유료'}
+            {data.isFree === true ? '무료' : '유료'}
           </FilterItem>
           <FilterItem $isFilter={districtFilter !== null}>
-            {district}
+            {data.district}
           </FilterItem>
         </FilterList>
-        <EventTitle>{title}</EventTitle>
+        <EventTitle>{data.title}</EventTitle>
         <EventPlace>
           <Location width='14px' height='14px' />
-          <div>{place}</div>
+          <div>{data.place}</div>
         </EventPlace>
         <EventDate>
           <img src={date} alt='date' />
           <div>{dateFormat()}</div>
         </EventDate>
-        {isVisited ? (
+        {data.isVisited ? (
           <CheckInButton $checkIn={false}>방문완료</CheckInButton>
         ) : (
           <CheckInButton $checkIn={true}>방문하기</CheckInButton>

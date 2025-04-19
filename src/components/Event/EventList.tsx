@@ -56,9 +56,9 @@ function EventList() {
 
   useScrollRestore({scrollY, setScrollY, data, status});
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
 
   return (
     <EventListContainer ref={listRef}>
@@ -83,7 +83,7 @@ function EventList() {
             page.events.map(event => (
               <EventItem
                 key={event.id}
-                {...event}
+                data={event}
                 categoryFilter={categoryFilter}
                 isFreeFilter={isFreeFilter}
                 districtFilter={districtFilter}
