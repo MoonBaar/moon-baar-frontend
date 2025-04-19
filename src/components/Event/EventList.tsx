@@ -80,15 +80,7 @@ function EventList() {
       ) : (
         <>
           {data?.pages.map(page =>
-            page.events.map(event => (
-              <EventItem
-                key={event.id}
-                data={event}
-                categoryFilter={categoryFilter}
-                isFreeFilter={isFreeFilter}
-                districtFilter={districtFilter}
-              />
-            )),
+            page.events.map(event => <EventItem key={event.id} data={event} />),
           )}
           <div ref={ref} style={{height: '1px'}} />
         </>

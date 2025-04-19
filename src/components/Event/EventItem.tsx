@@ -3,30 +3,15 @@ import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
+import {useEventFilterStore} from '@/store/eventList';
 
-interface EventItemProps {
+interface ItemProps {
   data: EventProps;
-  categoryFilter: {
-    id: number;
-    value: string;
-  } | null;
-  isFreeFilter: {
-    id: number;
-    value: string;
-  } | null;
-  districtFilter: {
-    id: number;
-    value: string;
-  } | null;
 }
 
-function EventItem({
-  data,
-  categoryFilter,
-  isFreeFilter,
-  districtFilter,
-}: EventItemProps) {
+function EventItem({data}: ItemProps) {
   const navigate = useNavigate();
+  const {categoryFilter, isFreeFilter, districtFilter} = useEventFilterStore();
 
   const dateFormat = () => {
     const startDateFormatted = data.startDate.split('T')[0];
