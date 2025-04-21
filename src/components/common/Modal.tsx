@@ -1,10 +1,30 @@
-import styled from 'styled-components';
+import styled, {css, keyframes} from 'styled-components';
 import ReactDOM from 'react-dom';
-import {ReactComponent as Close} from '@/assets/img/close.svg';
+import {useEffect, useState} from 'react';
 import {useModalStore} from '@/store/modal';
+import {ReactComponent as Close} from '@/assets/img/close.svg';
 
 function Modal() {
   const {isOpen, data, closeModal} = useModalStore();
+  const [idx, setIdx] = useState(0);
+  const [fade, setFade] = useState<'in' | 'out'>('in');
+
+  useEffect(() => {
+    if (data && data.content && data.content.length > 1) {
+      const intervalId = setInterval(() => {
+        setFade('out');
+        setTimeout(() => {
+          setIdx(prev => (prev + 1) % 2);
+          setFade('in');
+        }, 800);
+      }, 4000);
+
+      return () => {
+        setIdx(0);
+        clearInterval(intervalId);
+      };
+    }
+  }, []);
 
   if (!isOpen || !data) return null;
 
@@ -27,7 +47,9 @@ function Modal() {
           )}
           <TitleWrap>{data.title}</TitleWrap>
           {data.subtitle && <SubtitleWrap>{data.subtitle}</SubtitleWrap>}
-          {data.content && <ContentWrap>{data.content}</ContentWrap>}
+          {data.content && (
+            <ContentWrap $fade={fade}>{data.content[idx]}</ContentWrap>
+          )}
         </Body>
       </Container>
     </>,
@@ -60,6 +82,16 @@ const Container = styled.div<{$height: number}>`
   background-color: white;
   padding: 1.5rem;
   z-index: 11;
+  animation: moadlEffect 0.2s linear;
+
+  @keyframes moadlEffect {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   @media screen and (max-width: 44rem) {
     width: calc(100% - 9rem);
@@ -101,13 +133,34 @@ const SubtitleWrap = styled.p`
   color: ${props => props.theme.colors.primary};
   margin-top: 0.5rem;
 `;
-const ContentWrap = styled.p`
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`;
+
+const ContentWrap = styled.p<{$fade: 'in' | 'out'}>`
   font-size: ${props => props.theme.sizes.s};
   margin-top: 4.5rem;
   text-align: center;
   line-height: 2rem;
   word-break: keep-all;
-  padding: 0 4rem;
+  padding: 0 5rem;
+  opacity: 0;
+
+  animation: ${({$fade}) =>
+    $fade === 'in'
+      ? css`
+          ${fadeIn} 0.8s forwards
+        `
+      : css`
+          ${fadeOut} 0.8s forwards
+        `};
 `;
 
 export default Modal;
