@@ -5,19 +5,41 @@ import EventItem from './EventItem';
 import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import EventItemSkeleton from './EventItemSkeleton';
-import {useEventFilterStore, useScrollStore} from '@/store/eventList';
 import {EventListProps} from '@/assets/types/event';
-import {useScrollRestore} from '@/hooks/useScrollRestore';
 
-function EventList() {
-  const {query, categoryFilter, isFreeFilter, districtFilter, startDate} =
-    useEventFilterStore();
+interface EventParamsProps {
+  query: string | null;
+  categoryFilter: {
+    id: number;
+    value: string;
+  } | null;
+  isFreeFilter: {
+    id: number;
+    value: string;
+  } | null;
+  districtFilter: {
+    id: number;
+    value: string;
+  } | null;
+  startDate: string | null;
+}
+
+function EventList({
+  query,
+  categoryFilter,
+  isFreeFilter,
+  districtFilter,
+  startDate,
+}: EventParamsProps) {
   const categoryId = categoryFilter?.id || null;
   const isFree = isFreeFilter ? (isFreeFilter?.id === 1 ? true : false) : null;
   const districtId = districtFilter?.id || null;
   const {ref, inView} = useInView();
   const listRef = useRef<HTMLDivElement>(null);
-  const {scrollY, setScrollY} = useScrollStore();
+
+  useEffect(() => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, [query, categoryFilter, isFreeFilter, districtFilter, startDate]);
 
   const {data, isFetchingNextPage, fetchNextPage, hasNextPage, status} =
     useInfiniteQuery<EventListProps>({
@@ -53,8 +75,6 @@ function EventList() {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  useScrollRestore({scrollY, setScrollY, data, status});
 
   // useEffect(() => {
   //   console.log(data);
@@ -101,7 +121,6 @@ const EventListContainer = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin: auto;
   padding: 0 1.6rem 0.1rem 1.6rem;
   gap: 1.2rem;
 `;
@@ -111,6 +130,9 @@ const ErrorMessage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-top: 8rem;
   gap: 0.6rem;
   font-size: ${props => props.theme.sizes.m};
 `;

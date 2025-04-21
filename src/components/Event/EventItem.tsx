@@ -3,7 +3,7 @@ import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
-import {useEventFilterStore} from '@/store/eventList';
+import {useEventFilterStore, useScrollStore} from '@/store/eventList';
 
 interface ItemProps {
   data: EventProps;
@@ -12,6 +12,7 @@ interface ItemProps {
 function EventItem({data}: ItemProps) {
   const navigate = useNavigate();
   const {categoryFilter, isFreeFilter, districtFilter} = useEventFilterStore();
+  const {setScrollY} = useScrollStore();
 
   const dateFormat = () => {
     const startDateFormatted = data.startDate.split('T')[0];
@@ -24,6 +25,7 @@ function EventItem({data}: ItemProps) {
   };
 
   const handleOnClick = (e: React.MouseEvent) => {
+    setScrollY(window.scrollY);
     navigate(`/event/${data.id}`);
     e.stopPropagation();
   };

@@ -1,5 +1,7 @@
 import {EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
+import {useQuery} from '@tanstack/react-query';
+import {boundsProps, footprintListProps} from '@/assets/types/map';
 
 interface EventListParams {
   query: string | null;
@@ -33,4 +35,26 @@ export const getEventDetail = async (id: number) => {
   } catch (error) {
     console.log('get event detail fail: ', error);
   }
+};
+
+const fetchFootPrints = async (bounds: boundsProps) => {
+  const response = await baseAPI.get<footprintListProps>(
+    '/users/me/footprints',
+    {
+      params: bounds,
+    },
+  );
+  return response.data;
+};
+
+export const useGetFootPrints = (bounds: boundsProps) => {
+  return useQuery({
+    queryKey: ['events', bounds],
+    queryFn: () => fetchFootPrints(bounds),
+    enabled:
+      bounds.maxLat !== null &&
+      bounds.minLat !== null &&
+      bounds.maxLng !== null &&
+      bounds.minLng !== null,
+  });
 };

@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import EventList from '@/components/Event/EventList';
-import {useEventFilterStore, useIsOpenStore} from '@/store/eventList';
+import {
+  useEventFilterStore,
+  useIsOpenStore,
+  useScrollStore,
+} from '@/store/eventList';
 import FilterItem, {
   CloseImage,
   DropDownImage,
@@ -19,12 +23,13 @@ import {
 import {searchHeight} from '@/assets/data/constant';
 import dropdown from '@/assets/img/dropdown.png';
 import calendar from '@/assets/img/calendar.svg';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import CalendarFilter from '@/components/Event/CalendarFilter';
 import close from '@/assets/img/close.svg';
 
 function Event() {
   const {
+    query,
     categoryFilter,
     isFreeFilter,
     districtFilter,
@@ -38,12 +43,19 @@ function Event() {
   } = useEventFilterStore();
   const {isOpen, toggleIsOpen} = useIsOpenStore();
   const [openCalendar, setOpenCalendar] = useState(false);
+  const {scrollY} = useScrollStore();
 
   const handleReset = (e: React.MouseEvent) => {
     setOpenCalendar(false);
     resetStartDate();
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    if (scrollY) {
+      window.scrollTo(0, scrollY);
+    }
+  }, [scrollY]);
 
   return (
     <>
@@ -66,7 +78,8 @@ function Event() {
                 $hasFilter={
                   categoryFilter !== null ||
                   isFreeFilter !== null ||
-                  districtFilter !== null
+                  districtFilter !== null ||
+                  startDate !== null
                 }
               >
                 전체
@@ -123,7 +136,13 @@ function Event() {
               </FilterItemContainer>
             </FilterListContainer>
           </ListHeader>
-          <EventList />
+          <EventList
+            query={query}
+            categoryFilter={categoryFilter}
+            isFreeFilter={isFreeFilter}
+            districtFilter={districtFilter}
+            startDate={startDate}
+          />
         </EventContainer>
       </Layout>
       <Footer />
