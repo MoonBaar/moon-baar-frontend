@@ -9,7 +9,6 @@ export default function ScrollToTop() {
 
     if (shouldSkipScrollTop) return;
 
-    console.log('스크롤 초기화');
     window.scrollTo(0, 0);
   }, [pathname]);
 

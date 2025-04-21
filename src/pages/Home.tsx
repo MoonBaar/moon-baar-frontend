@@ -2,16 +2,76 @@ import styled from 'styled-components';
 import Layout from '@/components/common/Layout';
 import Footer from '@/components/common/Footer';
 import {Title} from './Event';
-import SimpleEventItem from '@/components/common/SimpleEventItem';
 import {searchHeight} from '@/assets/data/constant';
-import {Map, MapMarker, Polygon} from 'react-kakao-maps-sdk';
-import mapPolygon from '../assets/data/mapPolygon.json';
+import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import Header from '@/components/common/Header/Header';
+import {useCallback, useRef, useState} from 'react';
+import {useGetFootPrints} from './../apis/api/event';
+import MapEventItem from '@/components/common/MapEventItem';
+import footprint from '@/assets/img/footprintMarker.svg';
+import debounce from '@/utils/debounce';
+import {boundsProps, footprintProps} from '@/assets/types/map';
 
 function Home() {
-  const seoulCoordinates = mapPolygon.features[0].geometry.coordinates[0].map(
-    ([lng, lat]) => ({lat, lng}),
+  const mapRef = useRef<kakao.maps.Map>(null);
+  const [boundsInfo, setBoundsInfo] = useState<boundsProps>({
+    maxLat: null,
+    minLat: null,
+    maxLng: null,
+    minLng: null,
+  });
+  const {data} = useGetFootPrints(boundsInfo);
+  const [isOpen, setIsOpen] = useState(false);
+  const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
+
+  const handleIdle = useCallback(
+    debounce(() => {
+      const map = mapRef.current;
+      if (!map) return;
+
+      const bounds = map.getBounds();
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
+
+      setBoundsInfo(prev => {
+        const newBounds = {
+          maxLat: ne.getLat(),
+          minLat: sw.getLat(),
+          maxLng: ne.getLng(),
+          minLng: sw.getLng(),
+        };
+
+        // 기존 값과 같으면 setState 하지 않음
+        if (
+          prev.maxLat === newBounds.maxLat &&
+          prev.minLat === newBounds.minLat &&
+          prev.maxLng === newBounds.maxLng &&
+          prev.minLng === newBounds.minLng
+        ) {
+          return prev;
+        }
+
+        return newBounds;
+      });
+    }, 300),
+    [],
   );
+
+  const handleOnClick = (event: footprintProps) => {
+    if (!isOpen && mapRef.current) {
+      const samePositionEvents =
+        data?.events.filter(
+          e => e.latitude === event.latitude && e.longitude === event.longitude,
+        ) || [];
+      setEventsInfo(samePositionEvents);
+
+      mapRef.current.setCenter(
+        new kakao.maps.LatLng(event.latitude, event.longitude),
+      );
+      mapRef.current.setLevel(4);
+    }
+    setIsOpen(prev => !prev);
+  };
 
   return (
     <>
@@ -24,35 +84,46 @@ function Home() {
               center={{lat: 37.566826, lng: 126.9786567}}
               style={{width: '100%', height: '400px', borderRadius: '1rem'}}
               level={9}
+              onCreate={map => {
+                mapRef.current = map;
+                kakao.maps.event.addListener(map, 'idle', handleIdle);
+                handleIdle();
+              }}
+              onClick={() => setIsOpen(false)}
             >
-              <Polygon
-                path={seoulCoordinates}
-                strokeWeight={2}
-                strokeColor={'#5D9D8A'}
-                strokeOpacity={1}
-                strokeStyle={'solid'}
-                fillColor={'#C1D7D4'}
-                fillOpacity={0.2}
-              />
-              <MapMarker position={{lat: 37.566826, lng: 126.9786567}} />
+              {data?.events.map(event => (
+                <MapMarker
+                  key={event.id}
+                  position={{lat: event.latitude, lng: event.longitude}}
+                  image={{
+                    src: footprint,
+                    size: {
+                      width: 36,
+                      height: 46,
+                    },
+                  }}
+                  title={event.title}
+                  onClick={() => handleOnClick(event)}
+                />
+              ))}
             </Map>
             <FloatBox>
               <div>
-                방문한 구: <span>0/25</span>
+                이번 달 발자국 수: <span>5</span>
               </div>
             </FloatBox>
+            <MapInfoBox $isOpen={isOpen}>
+              <MapInfoList>
+                {eventsInfo.map(event => (
+                  <MapEventItem key={event.id} event={event} />
+                ))}
+              </MapInfoList>
+            </MapInfoBox>
           </MapWrap>
         </MapContainer>
         <MonthlyContainer>
           <Title>이번달 방문한 문화행사</Title>
-          <MonthlyEventList>
-            <SimpleEventItem />
-            <SimpleEventItem />
-            <SimpleEventItem />
-            <SimpleEventItem />
-            <SimpleEventItem />
-            <SimpleEventItem />
-          </MonthlyEventList>
+          <MonthlyEventList></MonthlyEventList>
         </MonthlyContainer>
       </Layout>
       <Footer />
@@ -73,11 +144,13 @@ const MapWrap = styled.div`
   width: 100%;
   height: 40rem;
   position: relative;
+  border-radius: 1rem;
+  border: 1px solid ${props => props.theme.colors.neutral5};
 `;
 
 const FloatBox = styled.div`
-  width: 12.8rem;
-  height: 3.6rem;
+  width: 14rem;
+  height: 3.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,6 +168,35 @@ const FloatBox = styled.div`
   span {
     color: ${props => props.theme.colors.primary};
   }
+`;
+
+const MapInfoBox = styled.div<{$isOpen: boolean}>`
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  font-size: ${props => props.theme.sizes.s};
+  border-radius: 1rem;
+  z-index: 5;
+  box-shadow:
+    0 -6px 6px -5px rgba(0, 0, 0, 0.2),
+    0 -8px 8px -5px rgba(0, 0, 0, 0.2);
+
+  max-height: ${({$isOpen}) => ($isOpen ? '15rem' : '0')};
+  opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
+  transition: all 0.3s ease-in-out;
+  pointer-events: ${({$isOpen}) => ($isOpen ? 'auto' : 'none')};
+`;
+
+const MapInfoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.4rem;
+  overflow: auto;
 `;
 
 const MonthlyContainer = styled.div`

@@ -1,22 +1,30 @@
 import styled from 'styled-components';
 import {ReactComponent as Location} from '@/assets/img/location.svg';
 import date from '@/assets/img/date.svg';
+import {footprintProps} from '@/assets/types/map';
+import {useNavigate} from 'react-router-dom';
 
-function SimpleEventItem() {
+function MapEventItem({event}: {event: footprintProps}) {
+  const navigate = useNavigate();
+
+  const dateFormat = (date: string) => {
+    const dateFormatted = date.split('T')[0];
+
+    return dateFormatted;
+  };
+
   return (
-    <EventItemContainer>
-      <MainImage src={'/'} alt='mainImage' />
+    <EventItemContainer onClick={() => navigate(`/event/${event.id}`)}>
+      <MainImage src={event.mainImg} alt='mainImage' />
       <EventContent>
-        <EventTitle>
-          [노원문화원] 2025 노원문화원 국악 예술단 정기공연
-        </EventTitle>
+        <EventTitle>{event.title}</EventTitle>
         <EventPlace>
           <Location width='14px' height='14px' />
-          <div>노원문화예술회관 대공연장</div>
+          <div>{event.place}</div>
         </EventPlace>
         <EventDate>
           <img src={date} alt='date' />
-          <div>2025-03-28~2025-03-28</div>
+          <div>방문한 날짜: {dateFormat(event.visitedAt)}</div>
         </EventDate>
       </EventContent>
     </EventItemContainer>
@@ -29,14 +37,12 @@ const EventItemContainer = styled.div`
   width: 100%;
   height: fit-content;
   gap: 0.8rem;
-  padding-bottom: 1rem;
-  border-bottom: 0.8px solid ${props => props.theme.colors.neutral4};
   cursor: pointer;
 `;
 
 const MainImage = styled.img`
-  width: 8rem;
-  height: 10rem;
+  width: 6.4rem;
+  height: 8rem;
   background-color: ${props => props.theme.colors.neutral5};
   border-radius: 0.4rem;
   flex-shrink: 0;
@@ -50,17 +56,17 @@ const EventContent = styled.div`
 `;
 
 const EventTitle = styled.div`
-  font-size: ${props => props.theme.sizes.m};
+  font-size: ${props => props.theme.sizes.s};
   font-weight: 500;
-  line-height: 2.4rem;
+  line-height: 2rem;
 `;
 
 const EventPlace = styled.div`
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: ${props => props.theme.sizes.s};
-  line-height: 2rem;
+  font-size: ${props => props.theme.sizes.xs};
+  line-height: 1.6rem;
   color: ${props => props.theme.colors.neutral2};
 `;
 
@@ -68,9 +74,9 @@ const EventDate = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: ${props => props.theme.sizes.s};
-  line-height: 2rem;
+  font-size: ${props => props.theme.sizes.xs};
+  line-height: 1.6rem;
   color: ${props => props.theme.colors.neutral2};
 `;
 
-export default SimpleEventItem;
+export default MapEventItem;
