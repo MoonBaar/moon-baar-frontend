@@ -9,6 +9,7 @@ import VisitedStats from '@/components/Detail/VisitedStats';
 import DetailHeader from '@/components/common/Header/DetailHeader';
 import Layout from '@/components/common/Layout';
 import {basicHeight, emptyHeight} from '@/assets/data/constant';
+import Modal from '@/components/common/Modal';
 
 function Detail() {
   const id = useParams().id || '0';
@@ -16,11 +17,15 @@ function Detail() {
 
   useEffect(() => {
     const getDetail = async () => {
-      if (id) {
-        const data = await getEventDetail(parseInt(id));
-        if (data) {
-          setInfo(data);
+      try {
+        if (id) {
+          const data = await getEventDetail(parseInt(id));
+          if (data) {
+            setInfo(data);
+          }
         }
+      } catch (error) {
+        console.log('get detail failed');
       }
     };
 
@@ -29,6 +34,7 @@ function Detail() {
 
   return (
     <>
+      <Modal />
       <DetailHeader name='행사 상세' />
       {info && (
         <Layout headerHeight={basicHeight} footerHeight={emptyHeight}>
@@ -39,7 +45,7 @@ function Detail() {
             category={info.category}
           />
           <Info data={info} />
-          <CheckInBtn isVisited={false} />
+          <CheckInBtn id={parseInt(id)} isVisited={info.isVisited || false} />
           <VisitedStats visitCount={145} likeCount={30} />
         </Layout>
       )}

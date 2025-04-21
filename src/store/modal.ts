@@ -6,7 +6,7 @@ interface ModalData {
   img?: string;
   title: string;
   subtitle?: string;
-  content?: string;
+  content?: string[];
 }
 
 interface ModalState {
