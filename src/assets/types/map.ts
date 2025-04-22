@@ -18,3 +18,8 @@ export interface footprintProps {
 export interface footprintListProps {
   events: footprintProps[];
 }
+
+export interface GeocodeProps {
+  latitude: number;
+  longitude: number;
+}

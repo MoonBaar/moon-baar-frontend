@@ -10,6 +10,7 @@ import DetailHeader from '@/components/common/Header/DetailHeader';
 import Layout from '@/components/common/Layout';
 import {basicHeight, emptyHeight} from '@/assets/data/constant';
 import Modal from '@/components/common/Modal';
+import FullImage from '@/components/Detail/FullImage';
 
 function Detail() {
   const id = useParams().id || '0';
@@ -47,6 +48,7 @@ function Detail() {
           <Info data={info} />
           <CheckInBtn id={parseInt(id)} isVisited={info.isVisited || false} />
           <VisitedStats visitCount={145} likeCount={30} />
+          <FullImage imageUrl={info.mainImg} />
         </Layout>
       )}
     </>
