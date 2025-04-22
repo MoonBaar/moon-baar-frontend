@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {EventDetailProps} from '@/assets/types/event';
 import {ReactComponent as Location} from '@/assets/img/location.svg';
@@ -12,13 +13,40 @@ interface InfoProps {
 }
 
 function Info({data}: InfoProps) {
+  const [addr, setAddr] = useState<string>('');
+
+  const getAddr = () => {
+    if (data.latitude && data.longitude) {
+      const geocoder = new kakao.maps.services.Geocoder();
+      const coord = new kakao.maps.LatLng(data.latitude, data.longitude);
+
+      const callback = (result: any, status: any) => {
+        if (status === kakao.maps.services.Status.OK) {
+          const arr = {...result};
+          setAddr(arr[0].road_address.address_name);
+        }
+      };
+
+      geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+    }
+  };
+
+  useEffect(() => {
+    getAddr();
+  }, []);
+
   return (
     <Container>
       <Title>{data.title}</Title>
       <InfoArea>
         <InfoWrap>
           <Location width='18px' height='18px' />
-          <h3>{data.place}</h3>
+          <PlaceLink
+            href={`https://map.kakao.com/link/map/${data.place},${data.latitude},${data.longitude}`}
+          >
+            {data.place}
+            <p>{addr}</p>
+          </PlaceLink>
         </InfoWrap>
         <InfoWrap>
           <Calendar />
@@ -43,7 +71,7 @@ function Info({data}: InfoProps) {
         </InfoWrap>
         <InfoWrap>
           <Exlink />
-          <a href={data.orgLink}>{data.orgLink}</a>
+          <OrgLink href={data.orgLink}>{data.orgLink}</OrgLink>
         </InfoWrap>
       </InfoArea>
     </Container>
@@ -82,15 +110,17 @@ const InfoWrap = styled.div`
     color: ${props => props.theme.colors.primary};
     margin-top: 0.5rem;
   }
+`;
 
-  & a {
-    color: ${props => props.theme.colors.primary};
-    text-decoration: underline;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 90%;
-  }
+const PlaceLink = styled.a``;
+
+const OrgLink = styled.a`
+  color: ${props => props.theme.colors.primary};
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 90%;
 `;
 
 export default Info;

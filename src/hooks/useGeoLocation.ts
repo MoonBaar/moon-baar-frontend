@@ -1,12 +1,8 @@
+import {GeocodeProps} from '@/assets/types/map';
 import {useEffect, useState} from 'react';
 
-interface LocationProps {
-  latitude: number;
-  longitude: number;
-}
-
 export const useGeoLocation = () => {
-  const [location, setLocation] = useState<LocationProps | null>(null);
+  const [location, setLocation] = useState<GeocodeProps | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSuccess = (position: GeolocationPosition) => {
