@@ -2,6 +2,7 @@ import {EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 import {useQuery} from '@tanstack/react-query';
 import {boundsProps, footprintListProps} from '@/assets/types/map';
+import {AxiosError} from 'axios';
 
 interface EventListParams {
   query: string | null;
@@ -33,7 +34,7 @@ export const getEventDetail = async (id: number) => {
 
     return data;
   } catch (error) {
-    console.log('get event detail fail: ', error);
+    throw error;
   }
 };
 
@@ -57,4 +58,21 @@ export const useGetFootPrints = (bounds: boundsProps) => {
       bounds.maxLng !== null &&
       bounds.minLng !== null,
   });
+};
+
+export const postVisit = async (
+  id: number,
+  latitude: number,
+  longitude: number,
+) => {
+  try {
+    const {data} = await baseAPI.post(`/events/${id}/visit`, {
+      latitude,
+      longitude,
+    });
+
+    return data;
+  } catch (error) {
+    throw error instanceof AxiosError && error.response?.data.message;
+  }
 };
