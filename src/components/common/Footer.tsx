@@ -56,6 +56,7 @@ const FooterContainer = styled.footer`
   height: 6.5rem;
   background-color: white;
   border-top: 1px solid ${props => props.theme.colors.neutral4};
+  z-index: 10;
 `;
 
 const NavItem = styled.div<{$fillcolor?: boolean}>`
