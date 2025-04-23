@@ -6,15 +6,16 @@ import {delLike, postLike} from '@/apis/api/like';
 
 interface ImageProps {
   id: number;
+  title: string;
   imageUrl: string;
   isLiked: boolean;
   category: string;
 }
 
-function MainImage({id, imageUrl, isLiked, category}: ImageProps) {
+function MainImage({id, title, imageUrl, isLiked, category}: ImageProps) {
   const [like, setLike] = useState<boolean>(isLiked);
 
-  const handleClick = async () => {
+  const handleLike = async () => {
     if (like) {
       try {
         await delLike(id);
@@ -32,13 +33,29 @@ function MainImage({id, imageUrl, isLiked, category}: ImageProps) {
     }
   };
 
+  const handleShare = () => {
+    if (window.Kakao) {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: title,
+          imageUrl: imageUrl,
+          link: {
+            mobileWebUrl: window.location.href,
+            webUrl: window.location.href,
+          },
+        },
+      });
+    }
+  };
+
   return (
     <Container $img={imageUrl}>
       <ButtonArea>
-        <ButtonWrap>
+        <ButtonWrap onClick={() => handleShare()}>
           <Share />
         </ButtonWrap>
-        <ButtonWrap onClick={() => handleClick()}>
+        <ButtonWrap onClick={() => handleLike()}>
           {like ? (
             <Like stroke='#DB2777' fill='#DB2777' />
           ) : (

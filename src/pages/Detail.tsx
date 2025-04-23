@@ -41,6 +41,7 @@ function Detail() {
         <Layout headerHeight={basicHeight} footerHeight={emptyHeight}>
           <MainImage
             id={parseInt(id)}
+            title={info.title}
             imageUrl={info.mainImg}
             isLiked={false}
             category={info.category}

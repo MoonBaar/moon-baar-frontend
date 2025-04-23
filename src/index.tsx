@@ -11,6 +11,9 @@ const root = ReactDOM.createRoot(
 );
 const queryClient = new QueryClient();
 
+window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
+window.Kakao.isInitialized();
+
 root.render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
