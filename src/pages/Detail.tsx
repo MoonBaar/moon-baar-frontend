@@ -10,6 +10,7 @@ import {basicHeight, emptyHeight} from '@/assets/data/constant';
 import Modal from '@/components/common/Modal';
 import FullImage from '@/components/Detail/FullImage';
 import InfoSkeleton from '@/components/Detail/InfoSkeleton';
+import {ErrorMessage} from '@/components/Event/EventList';
 
 function Detail() {
   const id = useParams().id || '0';
@@ -19,8 +20,14 @@ function Detail() {
     <>
       <Modal />
       <DetailHeader name='행사 상세' />
-      {status === 'pending' && <InfoSkeleton />}
-      {status === 'error' && <div>행사 상세 정보를 불러오지 못했습니다다</div>}
+      {status === 'pending' && (
+        <Layout headerHeight={basicHeight} footerHeight={emptyHeight}>
+          <InfoSkeleton />
+        </Layout>
+      )}
+      {status === 'error' && (
+        <ErrorMessage>행사 상세 정보를 불러오지 못했습니다</ErrorMessage>
+      )}
       {data && (
         <>
           <Layout headerHeight={basicHeight} footerHeight={emptyHeight}>

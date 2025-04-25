@@ -125,7 +125,7 @@ const EventListContainer = styled.div`
   gap: 1.2rem;
 `;
 
-const ErrorMessage = styled.div`
+export const ErrorMessage = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
