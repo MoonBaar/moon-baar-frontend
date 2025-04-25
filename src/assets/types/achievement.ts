@@ -11,3 +11,18 @@ export interface AchievementProps {
   color: string;
   data: AchievedProps;
 }
+
+export interface StatProps {
+  summary: {
+    totalVisits: number;
+    thisMonthVisits: number;
+  };
+  categories: {
+    top: AchievedProps;
+    all: string[];
+  };
+  districts: {
+    top: AchievedProps;
+    all: string[];
+  };
+}
