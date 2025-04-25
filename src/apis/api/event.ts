@@ -1,4 +1,4 @@
-import {EventListProps} from '@/assets/types/event';
+import {EventDetailProps, EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 import {useQuery} from '@tanstack/react-query';
 import {boundsProps, footprintListProps} from '@/assets/types/map';
@@ -28,14 +28,17 @@ export const getEventList = async ({
   return data;
 };
 
-export const getEventDetail = async (id: number) => {
-  try {
-    const {data} = await baseAPI.get(`/events/${id}`);
+const getEventDetail = async (id: number) => {
+  const response = await baseAPI.get<EventDetailProps>(`/events/${id}`);
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return response.data;
+};
+
+export const useGetEventDetail = (id: number) => {
+  return useQuery({
+    queryKey: ['info', id],
+    queryFn: () => getEventDetail(id),
+  });
 };
 
 const fetchFootPrints = async (bounds: boundsProps) => {
