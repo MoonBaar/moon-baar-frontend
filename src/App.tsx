@@ -9,8 +9,10 @@ import Detail from '@/pages/Detail';
 import Statistics from '@/pages/Statistics';
 import Login from './pages/Login';
 import LoginSuccess from './pages/LoginSuccess';
+import {useGetUser} from './apis/api/users';
 
 function App() {
+  useGetUser();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

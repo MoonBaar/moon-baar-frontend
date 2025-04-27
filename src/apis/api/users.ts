@@ -38,7 +38,18 @@ export const logout = async () => {
   } catch (e) {
     console.error('Logout API failed', e);
   } finally {
-    useAuthStore.getState().setUser(null);
     window.location.href = '/login';
+    useAuthStore.getState().setUser(null);
+  }
+};
+
+export const deleteUser = async () => {
+  try {
+    await baseAPI.delete('/users/me');
+  } catch (e) {
+    throw e;
+  } finally {
+    window.location.href = '/login';
+    useAuthStore.getState().setUser(null);
   }
 };

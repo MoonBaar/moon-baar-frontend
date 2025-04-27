@@ -1,7 +1,11 @@
 import {create} from 'zustand';
 
 export interface User {
-  name: string;
+  id: number;
+  nickname: string;
+  profileImageUrl: string;
+  createdAt: string;
+  updateAt: string;
 }
 
 interface AuthState {

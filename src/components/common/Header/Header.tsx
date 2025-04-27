@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import profile from '@/assets/img/profile.svg';
 import search from '@/assets/img/search.svg';
 import {useEventFilterStore} from '@/store/eventList';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Overlay} from '@/components/Event/FilterItem';
-import {logout} from '@/apis/api/users';
+import {deleteUser, logout} from '@/apis/api/users';
 import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
+import {useAuthStore} from '@/store/user';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -16,6 +16,7 @@ function Header() {
   const location = useLocation();
   const currentPath = useRef(location.pathname);
   const [isOpen, setIsOpen] = useState(false);
+  const {user} = useAuthStore();
 
   useEffect(() => {
     if (currentPath.current === '/event' && query) {
@@ -25,6 +26,10 @@ function Header() {
 
   const handleLogout = async () => {
     await logout();
+  };
+
+  const handleDeleteUser = async () => {
+    await deleteUser();
   };
 
   const handleSearch = useCallback(() => {
@@ -46,16 +51,22 @@ function Header() {
           <img src={moonbarIcon} alt='moonbar' />
           <Title>문발</Title>
         </TitleWrap>
-        <UserWrap $isOpen={isOpen}>
-          <User onClick={() => setIsOpen(prev => !prev)}>
-            <div>김문화님</div>
-            <img src={profile} alt='profile' />
-          </User>
-          <UserMenuWrap $isOpen={isOpen}>
-            <UserMenu onClick={handleLogout}>로그아웃</UserMenu>
-            <UserMenu>회원탈퇴</UserMenu>
-          </UserMenuWrap>
-        </UserWrap>
+        {user ? (
+          <UserWrap $isOpen={isOpen}>
+            <User onClick={() => setIsOpen(prev => !prev)}>
+              <div>{user.nickname}</div>
+              <img src={user.profileImageUrl} alt='profile' />
+            </User>
+            <UserMenuWrap $isOpen={isOpen}>
+              <UserMenu onClick={handleLogout}>로그아웃</UserMenu>
+              <UserMenu onClick={handleDeleteUser}>회원탈퇴</UserMenu>
+            </UserMenuWrap>
+          </UserWrap>
+        ) : (
+          <LoginButton onClick={() => navigate('/login')}>
+            로그인 하기
+          </LoginButton>
+        )}
       </HeaderWrap>
       {isOpen && <Overlay onClick={() => setIsOpen(false)} />}
       {(currentPath.current === '/' || currentPath.current === '/event') && (
@@ -112,8 +123,8 @@ const TitleWrap = styled.div`
   gap: 0.8rem;
 
   img {
-    width: 3.8rem;
-    height: 3.8rem;
+    width: 3.2rem;
+    height: 3.2rem;
   }
 `;
 
@@ -152,6 +163,13 @@ const User = styled.div`
   gap: 0.8rem;
   padding: 0.8rem 1rem;
   cursor: pointer;
+
+  img {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 
 const UserMenuWrap = styled.div<{$isOpen: boolean}>`
@@ -177,6 +195,11 @@ const UserMenu = styled.button`
   height: 4rem;
   color: white;
   border-top: 1px solid ${props => props.theme.colors.neutral5};
+`;
+
+const LoginButton = styled.button`
+  font-size: ${props => props.theme.sizes.s};
+  color: ${props => props.theme.colors.neutral1};
 `;
 
 const SearchBarWrap = styled.form`

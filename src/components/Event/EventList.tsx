@@ -76,10 +76,6 @@ function EventList({
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [data]);
-
   return (
     <EventListContainer ref={listRef}>
       {status === 'pending' && (

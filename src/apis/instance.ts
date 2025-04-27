@@ -48,7 +48,6 @@ baseAPI.interceptors.response.use(
 
       try {
         await baseAPI.post('/users/refresh');
-        console.log('토큰 재발급');
         processQueue(null);
         return baseAPI(originalRequest);
       } catch (refreshError: any) {
@@ -56,7 +55,6 @@ baseAPI.interceptors.response.use(
         const status = refreshError.response?.status;
 
         if (status === 401 || status === 403) {
-          console.log('토큰 만료');
           await logout();
         }
 
