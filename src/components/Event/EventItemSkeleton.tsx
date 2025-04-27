@@ -1,4 +1,5 @@
-import styled, {css} from 'styled-components';
+import {SkeletonAnimation} from '@/styles/common';
+import styled from 'styled-components';
 
 function EventItemSkeleton() {
   return (
@@ -17,21 +18,6 @@ function EventItemSkeleton() {
     </SkeletonContainer>
   );
 }
-
-const SkeletonAnimation = css`
-  background: linear-gradient(90deg, #eeeeee 25%, #dddddd 37%, #eeeeee 63%);
-  background-size: 400% 100%;
-  animation: loading 1.4s ease infinite;
-
-  @keyframes loading {
-    0% {
-      background-position: 100% 0;
-    }
-    100% {
-      background-position: -100% 0;
-    }
-  }
-`;
 
 const SkeletonContainer = styled.div`
   display: flex;

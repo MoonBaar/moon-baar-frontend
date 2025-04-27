@@ -4,10 +4,11 @@ import {useEventFilterStore} from '@/store/eventList';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Overlay} from '@/components/Event/FilterItem';
 import {deleteUser, logout} from '@/apis/api/users';
 import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
 import {useAuthStore} from '@/store/user';
+import profile from '@/assets/img/profile.svg';
+import {HeaderContainer, Overlay} from '@/styles/common';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -64,7 +65,8 @@ function Header() {
           </UserWrap>
         ) : (
           <LoginButton onClick={() => navigate('/login')}>
-            로그인 하기
+            <div>게스트</div>
+            <img src={profile} alt='profile' />
           </LoginButton>
         )}
       </HeaderWrap>
@@ -95,18 +97,6 @@ function Header() {
     </HeaderContainer>
   );
 }
-
-export const HeaderContainer = styled.header`
-  position: fixed;
-  top: 0;
-  max-width: 44rem;
-  width: 100%;
-  background-color: white;
-  box-shadow:
-    0px 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0px 2px 4px -2px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-`;
 
 const HeaderWrap = styled.div`
   display: flex;
@@ -198,6 +188,9 @@ const UserMenu = styled.button`
 `;
 
 const LoginButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   font-size: ${props => props.theme.sizes.s};
   color: ${props => props.theme.colors.neutral1};
 `;

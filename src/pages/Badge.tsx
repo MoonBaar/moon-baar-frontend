@@ -7,6 +7,9 @@ import Header from '@/components/common/Header/Header';
 import Layout from '@/components/common/Layout';
 import {basicHeight} from '@/assets/data/constant';
 import {AchievedProps} from '@/assets/types/achievement';
+import {useAuthStore} from '@/store/user';
+import {LoginMessage} from '@/styles/common';
+import LoginButton from '@/components/common/LoginButton';
 
 const dummy = [
   {
@@ -79,34 +82,44 @@ function Badge() {
     count: 14,
     percentage: 70,
   });
+  const {user} = useAuthStore();
 
   return (
     <>
       <Header />
       <Layout headerHeight={basicHeight}>
-        <Box style={{paddingBottom: 0}}>
-          <Label>다음 목표</Label>
-          <Achievement
-            subtitle='서울 25개 구 모두 방문하기'
-            total={25}
-            type='goal'
-            color='#5D9D8A'
-            data={achieved}
-          />
-        </Box>
-        <Box>
-          <Label>나의 배지</Label>
-          <BadgeListWrap>
-            {list.map(item => (
-              <BadgeItem
-                key={item.id}
-                isDone={item.isDone}
-                name={item.name}
-                img={item.img}
+        {user ? (
+          <>
+            <Box style={{paddingBottom: 0}}>
+              <Label>다음 목표</Label>
+              <Achievement
+                subtitle='서울 25개 구 모두 방문하기'
+                total={25}
+                type='goal'
+                color='#5D9D8A'
+                data={achieved}
               />
-            ))}
-          </BadgeListWrap>
-        </Box>
+            </Box>
+            <Box>
+              <Label>나의 배지</Label>
+              <BadgeListWrap>
+                {list.map(item => (
+                  <BadgeItem
+                    key={item.id}
+                    isDone={item.isDone}
+                    name={item.name}
+                    img={item.img}
+                  />
+                ))}
+              </BadgeListWrap>
+            </Box>
+          </>
+        ) : (
+          <LoginMessage>
+            <div>로그인하고 배지를 모아보세요!</div>
+            <LoginButton />
+          </LoginMessage>
+        )}
       </Layout>
       <Footer />
     </>

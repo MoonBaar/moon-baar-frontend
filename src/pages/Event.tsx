@@ -5,12 +5,6 @@ import {
   useIsOpenStore,
   useScrollStore,
 } from '@/store/eventList';
-import FilterItem, {
-  CloseImage,
-  DropDownImage,
-  FilterItemContainer,
-  TriggerButton,
-} from '@/components/Event/FilterItem';
 import filter from '@/assets/img/filter.png';
 import Layout from '@/components/common/Layout';
 import Header from '@/components/common/Header/Header';
@@ -26,6 +20,15 @@ import calendar from '@/assets/img/calendar.svg';
 import {useEffect, useState} from 'react';
 import CalendarFilter from '@/components/Event/CalendarFilter';
 import close from '@/assets/img/close.svg';
+import {
+  CloseImage,
+  DropDownImage,
+  FilterItemContainer,
+  SvgImg,
+  Title,
+  TriggerButton,
+} from '@/styles/common';
+import FilterItem from '@/components/Event/FilterItem';
 
 function Event() {
   const {
@@ -177,13 +180,6 @@ const ListHeaderWrap = styled.div`
   width: 100%;
 `;
 
-export const Title = styled.h2`
-  font-size: ${props => props.theme.sizes.l};
-  font-weight: bold;
-  line-height: 2.8rem;
-  text-align: center;
-`;
-
 const FilterButtonContainer = styled.div`
   display: flex;
   gap: 0.5rem;
@@ -233,12 +229,10 @@ const ResetButton = styled.button<{$hasFilter: boolean}>`
   border-radius: 1.6rem;
 `;
 
-const CalendarImage = styled.img`
+const CalendarImage = styled(SvgImg)`
   width: 1.5rem;
   height: 1.5rem;
   margin-left: 0.2rem;
-  filter: invert(58%) sepia(30%) saturate(442%) hue-rotate(111deg)
-    brightness(92%) contrast(90%);
 `;
 
 const CalendarOption = styled.div<{$isOpen: boolean}>`

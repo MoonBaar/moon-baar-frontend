@@ -5,8 +5,10 @@ import Moonbar from '@/assets/img/moonbar.jpg';
 import {ReactComponent as Kakao} from '@/assets/img/kakao.svg';
 import {ReactComponent as Naver} from '@/assets/img/naver.svg';
 import {loginOauth} from '@/apis/api/users';
+import {useNavigate} from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
   return (
     <Layout headerHeight={emptyHeight} footerHeight={emptyHeight}>
       <Container>
@@ -27,6 +29,9 @@ function Login() {
             <Naver width={18} height={18} />
             <div>네이버로 시작하기</div>
           </LoginButton>
+          <GuestButton onClick={() => navigate('/event')}>
+            앱 둘러보기
+          </GuestButton>
         </LoginWrap>
       </Container>
     </Layout>
@@ -40,6 +45,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: auto;
   gap: 3rem;
 
   img {
@@ -74,6 +80,7 @@ const LoginWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   width: 100%;
   gap: 1.6rem;
   margin-top: 10rem;
@@ -95,6 +102,13 @@ const LoginButton = styled.button<{option: string}>`
     font-weight: 500;
     color: ${props => props.option === 'naver' && '#ffffff'};
   }
+`;
+
+const GuestButton = styled.button`
+  width: fit-content;
+  font-weight: 500;
+  color: ${props => props.theme.colors.neutral2};
+  border-bottom: 1px solid ${props => props.theme.colors.neutral2};
 `;
 
 export default Login;

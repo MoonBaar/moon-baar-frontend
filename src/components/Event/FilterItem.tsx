@@ -3,6 +3,14 @@ import styled from 'styled-components';
 import close from '@/assets/img/close.svg';
 import {useEventFilterStore} from '@/store/eventList';
 import dropdown from '@/assets/img/dropdown.png';
+import {
+  CloseImage,
+  DropDownImage,
+  FilterItemContainer,
+  Overlay,
+  SvgImg,
+  TriggerButton,
+} from '@/styles/common';
 
 interface FilterButtonProps {
   label: string;
@@ -75,44 +83,6 @@ function FilterItem({
   );
 }
 
-export const FilterItemContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-export const TriggerButton = styled.button<{$isSelectedValue: boolean}>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.48rem 1.2rem;
-  width: 100%;
-  max-width: max-content;
-  height: 3rem;
-  font-size: ${props => props.theme.sizes.s};
-  background-color: ${props =>
-    props.$isSelectedValue
-      ? props.theme.colors.secondary
-      : props.theme.colors.neutral5};
-  color: ${props => props.theme.colors.primary};
-  border-radius: 1.6rem;
-`;
-
-export const CloseImage = styled.img`
-  width: 0.9rem;
-  height: 0.9rem;
-  margin-left: 0.5rem;
-  filter: invert(58%) sepia(30%) saturate(442%) hue-rotate(111deg)
-    brightness(92%) contrast(90%);
-`;
-
-export const DropDownImage = styled.img`
-  width: 1.1rem;
-  height: 1.1rem;
-  margin: 0.2rem 0 0 0.5rem;
-  filter: invert(58%) sepia(30%) saturate(442%) hue-rotate(111deg)
-    brightness(92%) contrast(90%);
-`;
-
 const FilterOptionList = styled.ul<{$isOpen: boolean}>`
   display: flex;
   flex-direction: column;
@@ -157,16 +127,6 @@ const FilterOption = styled.li<{$selected: boolean}>`
     color: ${props => props.theme.colors.primary};
     background-color: ${props => props.theme.colors.secondary};
   }
-`;
-
-export const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-  background: transparent;
 `;
 
 export default FilterItem;

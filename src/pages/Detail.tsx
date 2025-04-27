@@ -10,7 +10,7 @@ import {basicHeight, emptyHeight} from '@/assets/data/constant';
 import Modal from '@/components/common/Modal';
 import FullImage from '@/components/Detail/FullImage';
 import InfoSkeleton from '@/components/Detail/InfoSkeleton';
-import {ErrorMessage} from '@/components/Event/EventList';
+import {ErrorMessage} from '@/styles/common';
 
 function Detail() {
   const id = useParams().id || '0';
