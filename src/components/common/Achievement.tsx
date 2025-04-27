@@ -3,19 +3,26 @@ import {AchievementProps} from '@/assets/types/achievement';
 
 function Achievement({subtitle, type, total, color, data}: AchievementProps) {
   const getRate = () => {
+    if (!data) return 0;
     return Number((data.percentage / 100).toFixed(1));
   };
 
   return (
     <AchievementBox>
       <ContentBox>
-        <TitleWrap>
-          {data.name}
-          {subtitle && <p>{subtitle}</p>}
-        </TitleWrap>
-        <Achieved>
-          {type ? `${data.count}/${total}` : `${data.count}회`}
-        </Achieved>
+        {data ? (
+          <>
+            <TitleWrap>
+              {data.name}
+              {subtitle && <p>{subtitle}</p>}
+            </TitleWrap>
+            <Achieved>
+              {type ? `${data.count}/${total}` : `${data.count}회`}
+            </Achieved>
+          </>
+        ) : (
+          <TitleWrap>참여한 행사가 없습니다.</TitleWrap>
+        )}
       </ContentBox>
       <Graph>
         <AchievedGraph $color={color} $rate={() => getRate()} />
@@ -75,5 +82,7 @@ const AchievedGraph = styled.div<{$color: string; $rate: () => number}>`
   height: 0.8rem;
   border-radius: 8px;
 `;
+
+const NoContent = styled.div``;
 
 export default Achievement;

@@ -9,7 +9,7 @@ export interface AchievementProps {
   total?: number;
   type?: string;
   color: string;
-  data: AchievedProps;
+  data: AchievedProps | null;
 }
 
 export interface StatProps {
