@@ -7,10 +7,10 @@ import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import Header from '@/components/common/Header/Header';
 import {useCallback, useRef, useState} from 'react';
 import {useGetFootPrints} from './../apis/api/event';
-import MapEventItem from '@/components/common/MapEventItem';
 import footprint from '@/assets/img/footprintMarker.svg';
 import debounce from '@/utils/debounce';
 import {boundsProps, footprintProps} from '@/assets/types/map';
+import MapEventItem from '@/components/Map/MapEventItem';
 
 function Home() {
   const mapRef = useRef<kakao.maps.Map>(null);
@@ -172,7 +172,6 @@ const FloatBox = styled.div`
 
 const MapInfoBox = styled.div<{$isOpen: boolean}>`
   width: 100%;
-  height: 100%;
   background-color: white;
   position: absolute;
   bottom: 0;
@@ -182,6 +181,7 @@ const MapInfoBox = styled.div<{$isOpen: boolean}>`
   box-shadow:
     0 -6px 6px -5px rgba(0, 0, 0, 0.2),
     0 -8px 8px -5px rgba(0, 0, 0, 0.2);
+  overflow: auto;
 
   max-height: ${({$isOpen}) => ($isOpen ? '15rem' : '0')};
   opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
@@ -196,7 +196,6 @@ const MapInfoList = styled.div`
   width: 100%;
   height: 100%;
   padding: 1.4rem;
-  overflow: auto;
 `;
 
 const MonthlyContainer = styled.div`

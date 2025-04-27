@@ -1,10 +1,13 @@
 import styled from 'styled-components';
-import profile from '@/assets/img/profile.svg';
 import search from '@/assets/img/search.svg';
 import {useEventFilterStore} from '@/store/eventList';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {Overlay} from '@/components/Event/FilterItem';
+import {deleteUser, logout} from '@/apis/api/users';
+import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
+import {useAuthStore} from '@/store/user';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -12,12 +15,22 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = useRef(location.pathname);
+  const [isOpen, setIsOpen] = useState(false);
+  const {user} = useAuthStore();
 
   useEffect(() => {
     if (currentPath.current === '/event' && query) {
       setInputValue(query);
     }
   }, []);
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const handleDeleteUser = async () => {
+    await deleteUser();
+  };
 
   const handleSearch = useCallback(() => {
     setQuery(inputValue);
@@ -33,13 +46,29 @@ function Header() {
 
   return (
     <HeaderContainer>
-      <TitleWrap>
-        <Title>문발</Title>
-        <User>
-          <div>김문화님</div>
-          <img src={profile} alt='profile' />
-        </User>
-      </TitleWrap>
+      <HeaderWrap>
+        <TitleWrap>
+          <img src={moonbarIcon} alt='moonbar' />
+          <Title>문발</Title>
+        </TitleWrap>
+        {user ? (
+          <UserWrap $isOpen={isOpen}>
+            <User onClick={() => setIsOpen(prev => !prev)}>
+              <div>{user.nickname}</div>
+              <img src={user.profileImageUrl} alt='profile' />
+            </User>
+            <UserMenuWrap $isOpen={isOpen}>
+              <UserMenu onClick={handleLogout}>로그아웃</UserMenu>
+              <UserMenu onClick={handleDeleteUser}>회원탈퇴</UserMenu>
+            </UserMenuWrap>
+          </UserWrap>
+        ) : (
+          <LoginButton onClick={() => navigate('/login')}>
+            로그인 하기
+          </LoginButton>
+        )}
+      </HeaderWrap>
+      {isOpen && <Overlay onClick={() => setIsOpen(false)} />}
       {(currentPath.current === '/' || currentPath.current === '/event') && (
         <SearchBarWrap onSubmit={handleSubmit}>
           <SearchBar>
@@ -79,7 +108,7 @@ export const HeaderContainer = styled.header`
   z-index: 10;
 `;
 
-const TitleWrap = styled.div`
+const HeaderWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,9 +117,43 @@ const TitleWrap = styled.div`
   padding: 1.6rem;
 `;
 
+const TitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  img {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+`;
+
 const Title = styled.h1`
   font-size: ${props => props.theme.sizes.xl};
   font-weight: bold;
+`;
+
+const UserWrap = styled.div<{$isOpen: boolean}>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: fit-content;
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  background-color: ${props =>
+    props.$isOpen ? props.theme.colors.primary : 'white'};
+  color: ${props => (props.$isOpen ? 'white' : props.theme.colors.neutral1)};
+  font-size: ${props => props.theme.sizes.s};
+  border-radius: 0.8rem;
+  z-index: 15;
+  box-shadow: ${({$isOpen}) =>
+    $isOpen
+      ? '4px 6px 4px -2px rgba(0, 0, 0, 0.1), 4px 2px 4px -2px rgba(0, 0, 0, 0.1)'
+      : 'none'};
+
+  max-height: ${({$isOpen}) => ($isOpen ? '12.8rem' : '4.8rem')};
+  transition: all 0.3s ease-in-out;
 `;
 
 const User = styled.div`
@@ -98,9 +161,45 @@ const User = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.8rem;
-  font-size: ${props => props.theme.sizes.s};
-  margin-right: 0.8rem;
+  padding: 0.8rem 1rem;
   cursor: pointer;
+
+  img {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+`;
+
+const UserMenuWrap = styled.div<{$isOpen: boolean}>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: ${props => props.theme.colors.primary};
+  border-radius: 0 0 0.8rem 0.8rem;
+
+  max-height: ${({$isOpen}) => ($isOpen ? '8rem' : '0')};
+  opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
+  transition: all 0.3s ease-in-out;
+  pointer-events: ${({$isOpen}) => ($isOpen ? 'auto' : 'none')};
+`;
+
+const UserMenu = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 4rem;
+  color: white;
+  border-top: 1px solid ${props => props.theme.colors.neutral5};
+`;
+
+const LoginButton = styled.button`
+  font-size: ${props => props.theme.sizes.s};
+  color: ${props => props.theme.colors.neutral1};
 `;
 
 const SearchBarWrap = styled.form`

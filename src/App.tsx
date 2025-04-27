@@ -7,13 +7,19 @@ import Event from '@/pages/Event';
 import Badge from '@/pages/Badge';
 import Detail from '@/pages/Detail';
 import Statistics from '@/pages/Statistics';
+import Login from './pages/Login';
+import LoginSuccess from './pages/LoginSuccess';
+import {useGetUser} from './apis/api/users';
 
 function App() {
+  useGetUser();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/login-success' element={<LoginSuccess />} />
         <Route path='/event' element={<Event />} />
         <Route path='/event/:id' element={<Detail />} />
         <Route path='/badge' element={<Badge />} />
