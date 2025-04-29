@@ -25,7 +25,7 @@ function Home() {
   const {data} = useGetFootPrints(boundsInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
-  const {user} = useAuthStore();
+  const {user, isGuest} = useAuthStore();
 
   const handleIdle = useCallback(
     debounce(() => {
@@ -44,7 +44,6 @@ function Home() {
           minLng: sw.getLng(),
         };
 
-        // 기존 값과 같으면 setState 하지 않음
         if (
           prev.maxLat === newBounds.maxLat &&
           prev.minLat === newBounds.minLat &&
@@ -82,7 +81,11 @@ function Home() {
       <Layout headerHeight={searchHeight}>
         <MapContainer>
           <Title>나의 문화 발자국 지도</Title>
-          {user ? (
+          {!user || isGuest ? (
+            <MapLoginMessage>
+              <div>로그인하고 발자국을 남겨보세요!</div>
+            </MapLoginMessage>
+          ) : (
             <MapWrap>
               <Map
                 center={{lat: 37.566826, lng: 126.9786567}}
@@ -124,21 +127,16 @@ function Home() {
                 </MapInfoList>
               </MapInfoBox>
             </MapWrap>
-          ) : (
-            <MapLoginMessage>
-              <div>로그인하고 발자국을 남겨보세요!</div>
-            </MapLoginMessage>
           )}
         </MapContainer>
         <MonthlyContainer>
           <Title>이번달 방문한 문화행사</Title>
-          {user ? (
-            <MonthlyEventList></MonthlyEventList>
-          ) : (
+          {!user || isGuest ? (
             <LoginMessage>
-              <div>로그인이 필요해요</div>
-              <LoginButton />
+              <LoginButton comment='로그인이 필요해요' />
             </LoginMessage>
+          ) : (
+            <MonthlyEventList></MonthlyEventList>
           )}
         </MonthlyContainer>
       </Layout>

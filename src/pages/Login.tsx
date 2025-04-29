@@ -6,9 +6,16 @@ import {ReactComponent as Kakao} from '@/assets/img/kakao.svg';
 import {ReactComponent as Naver} from '@/assets/img/naver.svg';
 import {loginOauth} from '@/apis/api/users';
 import {useNavigate} from 'react-router-dom';
+import {useAuthStore} from '@/store/user';
 
 function Login() {
   const navigate = useNavigate();
+  const {setIsGuest} = useAuthStore();
+
+  const handleOnClickGuest = () => {
+    setIsGuest(true);
+    navigate('/event');
+  };
   return (
     <Layout headerHeight={emptyHeight} footerHeight={emptyHeight}>
       <Container>
@@ -29,9 +36,7 @@ function Login() {
             <Naver width={18} height={18} />
             <div>네이버로 시작하기</div>
           </LoginButton>
-          <GuestButton onClick={() => navigate('/event')}>
-            앱 둘러보기
-          </GuestButton>
+          <GuestButton onClick={handleOnClickGuest}>앱 둘러보기</GuestButton>
         </LoginWrap>
       </Container>
     </Layout>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {useEffect, useState} from 'react';
 import {useModalStore} from '@/store/modal';
 import {ReactComponent as Close} from '@/assets/img/close.svg';
+import LoginButton from './LoginButton';
 
 function Modal() {
   const {isOpen, data, closeModal} = useModalStore();
@@ -50,6 +51,7 @@ function Modal() {
           {data.content && (
             <ContentWrap $fade={fade}>{data.content[idx]}</ContentWrap>
           )}
+          {data.type === 'guest' && <LoginButton />}
         </Body>
       </Container>
     </>,

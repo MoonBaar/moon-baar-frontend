@@ -68,8 +68,7 @@ function Statistics() {
           </>
         ) : (
           <LoginMessage>
-            <div>로그인하고 방문 통계를 확인해보세요!</div>
-            <LoginButton />
+            <LoginButton comment='로그인하고 방문 통계를 확인해보세요!' />
           </LoginMessage>
         )}
       </Layout>

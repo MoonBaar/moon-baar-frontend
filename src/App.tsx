@@ -9,21 +9,22 @@ import Detail from '@/pages/Detail';
 import Statistics from '@/pages/Statistics';
 import Login from './pages/Login';
 import LoginSuccess from './pages/LoginSuccess';
-import {useGetUser} from './apis/api/users';
+import PrivateRoute from './components/common/PrivateRoute';
 
 function App() {
-  useGetUser();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Routes>
-        <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/login-success' element={<LoginSuccess />} />
-        <Route path='/event' element={<Event />} />
-        <Route path='/event/:id' element={<Detail />} />
-        <Route path='/badge' element={<Badge />} />
-        <Route path='/statistics' element={<Statistics />} />
+        <Route element={<PrivateRoute />}>
+          <Route path='/' element={<Home />} />
+          <Route path='/event' element={<Event />} />
+          <Route path='/event/:id' element={<Detail />} />
+          <Route path='/badge' element={<Badge />} />
+          <Route path='/statistics' element={<Statistics />} />
+        </Route>
       </Routes>
     </ThemeProvider>
   );

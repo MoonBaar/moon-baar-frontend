@@ -3,6 +3,9 @@ import {ReactComponent as Share} from '@/assets/img/share.svg';
 import {ReactComponent as Like} from '@/assets/img/like.svg';
 import {useState} from 'react';
 import {delLike, postLike} from '@/apis/api/like';
+import {useModalStore} from '@/store/modal';
+import {User} from '@/store/user';
+import {modalHeightM} from '@/assets/data/constant';
 
 interface ImageProps {
   id: number;
@@ -10,25 +13,35 @@ interface ImageProps {
   imageUrl: string;
   isLiked: boolean;
   category: string;
+  user: User | null;
 }
 
-function MainImage({id, title, imageUrl, isLiked, category}: ImageProps) {
+function MainImage({id, title, imageUrl, isLiked, category, user}: ImageProps) {
   const [like, setLike] = useState<boolean>(isLiked);
+  const {openModal} = useModalStore();
 
   const handleLike = async () => {
-    if (like) {
-      try {
-        await delLike(id);
-        setLike(false);
-      } catch (error) {
-        console.log('delete like fail: ', error);
-      }
+    if (!user) {
+      openModal({
+        type: 'guest',
+        height: modalHeightM,
+        title: '로그인이 필요합니다',
+      });
     } else {
-      try {
-        await postLike(id);
-        setLike(true);
-      } catch (error) {
-        console.log('post like fail: ', error);
+      if (like) {
+        try {
+          await delLike(id);
+          setLike(false);
+        } catch (error) {
+          console.log('delete like fail: ', error);
+        }
+      } else {
+        try {
+          await postLike(id);
+          setLike(true);
+        } catch (error) {
+          console.log('post like fail: ', error);
+        }
       }
     }
   };
@@ -75,6 +88,7 @@ const Container = styled.div<{$img: string}>`
   background-image: url(${props => props.$img});
   background-size: cover;
   background-position-y: center;
+  box-shadow: inset 0px 30px 30px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const ButtonArea = styled.div`

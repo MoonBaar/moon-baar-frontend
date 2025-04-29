@@ -9,6 +9,7 @@ import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
 import {useAuthStore} from '@/store/user';
 import profile from '@/assets/img/profile.svg';
 import {HeaderContainer, Overlay} from '@/styles/common';
+import LoginButton from '../LoginButton';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -17,7 +18,7 @@ function Header() {
   const location = useLocation();
   const currentPath = useRef(location.pathname);
   const [isOpen, setIsOpen] = useState(false);
-  const {user} = useAuthStore();
+  const {user, isGuest} = useAuthStore();
 
   useEffect(() => {
     if (currentPath.current === '/event' && query) {
@@ -52,22 +53,23 @@ function Header() {
           <img src={moonbarIcon} alt='moonbar' />
           <Title>문발</Title>
         </TitleWrap>
-        {user ? (
+        {!user || isGuest ? (
+          <LoginButton size='s' />
+        ) : (
           <UserWrap $isOpen={isOpen}>
             <User onClick={() => setIsOpen(prev => !prev)}>
               <div>{user.nickname}</div>
-              <img src={user.profileImageUrl} alt='profile' />
+              {user.profileImageUrl ? (
+                <img src={user.profileImageUrl} alt='profile' />
+              ) : (
+                <img src={profile} alt='profile' />
+              )}
             </User>
             <UserMenuWrap $isOpen={isOpen}>
               <UserMenu onClick={handleLogout}>로그아웃</UserMenu>
               <UserMenu onClick={handleDeleteUser}>회원탈퇴</UserMenu>
             </UserMenuWrap>
           </UserWrap>
-        ) : (
-          <LoginButton onClick={() => navigate('/login')}>
-            <div>게스트</div>
-            <img src={profile} alt='profile' />
-          </LoginButton>
         )}
       </HeaderWrap>
       {isOpen && <Overlay onClick={() => setIsOpen(false)} />}
@@ -185,14 +187,6 @@ const UserMenu = styled.button`
   height: 4rem;
   color: white;
   border-top: 1px solid ${props => props.theme.colors.neutral5};
-`;
-
-const LoginButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-size: ${props => props.theme.sizes.s};
-  color: ${props => props.theme.colors.neutral1};
 `;
 
 const SearchBarWrap = styled.form`

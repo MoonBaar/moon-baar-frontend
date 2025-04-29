@@ -82,13 +82,17 @@ function Badge() {
     count: 14,
     percentage: 70,
   });
-  const {user} = useAuthStore();
+  const {user, isGuest} = useAuthStore();
 
   return (
     <>
       <Header />
       <Layout headerHeight={basicHeight}>
-        {user ? (
+        {!user || isGuest ? (
+          <LoginMessage>
+            <LoginButton comment='로그인하고 배지를 모아보세요!' />
+          </LoginMessage>
+        ) : (
           <>
             <Box style={{paddingBottom: 0}}>
               <Label>다음 목표</Label>
@@ -114,11 +118,6 @@ function Badge() {
               </BadgeListWrap>
             </Box>
           </>
-        ) : (
-          <LoginMessage>
-            <div>로그인하고 배지를 모아보세요!</div>
-            <LoginButton />
-          </LoginMessage>
         )}
       </Layout>
       <Footer />

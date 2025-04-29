@@ -18,7 +18,6 @@ export const LoginMessage = styled.div`
   flex-direction: column;
   align-items: center;
   margin: auto;
-  gap: 1.6rem;
   font-size: ${props => props.theme.sizes.s};
 `;
 
