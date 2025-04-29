@@ -10,11 +10,13 @@ import {basicHeight, emptyHeight} from '@/assets/data/constant';
 import Modal from '@/components/common/Modal';
 import FullImage from '@/components/Detail/FullImage';
 import InfoSkeleton from '@/components/Detail/InfoSkeleton';
-import {ErrorMessage} from '@/components/Event/EventList';
+import {ErrorMessage} from '@/styles/common';
+import {useAuthStore} from '@/store/user';
 
 function Detail() {
   const id = useParams().id || '0';
   const {data, status} = useGetEventDetail(parseInt(id));
+  const {user} = useAuthStore();
 
   return (
     <>
@@ -37,9 +39,14 @@ function Detail() {
               imageUrl={data.mainImg}
               isLiked={false}
               category={data.category}
+              user={user}
             />
             <Info data={data} />
-            <CheckInBtn id={parseInt(id)} isVisited={data.isVisited || false} />
+            <CheckInBtn
+              id={parseInt(id)}
+              isVisited={data.isVisited || false}
+              user={user}
+            />
             <VisitedStats visitCount={145} likeCount={30} />
             <FullImage imageUrl={data.mainImg} />
           </Layout>

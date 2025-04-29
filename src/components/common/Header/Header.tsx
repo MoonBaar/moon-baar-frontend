@@ -4,10 +4,12 @@ import {useEventFilterStore} from '@/store/eventList';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Overlay} from '@/components/Event/FilterItem';
 import {deleteUser, logout} from '@/apis/api/users';
 import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
 import {useAuthStore} from '@/store/user';
+import profile from '@/assets/img/profile.svg';
+import {HeaderContainer, Overlay} from '@/styles/common';
+import LoginButton from '../LoginButton';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -16,7 +18,7 @@ function Header() {
   const location = useLocation();
   const currentPath = useRef(location.pathname);
   const [isOpen, setIsOpen] = useState(false);
-  const {user} = useAuthStore();
+  const {user, isGuest} = useAuthStore();
 
   useEffect(() => {
     if (currentPath.current === '/event' && query) {
@@ -51,21 +53,23 @@ function Header() {
           <img src={moonbarIcon} alt='moonbar' />
           <Title>문발</Title>
         </TitleWrap>
-        {user ? (
+        {!user || isGuest ? (
+          <LoginButton size='s' />
+        ) : (
           <UserWrap $isOpen={isOpen}>
             <User onClick={() => setIsOpen(prev => !prev)}>
               <div>{user.nickname}</div>
-              <img src={user.profileImageUrl} alt='profile' />
+              {user.profileImageUrl ? (
+                <img src={user.profileImageUrl} alt='profile' />
+              ) : (
+                <img src={profile} alt='profile' />
+              )}
             </User>
             <UserMenuWrap $isOpen={isOpen}>
               <UserMenu onClick={handleLogout}>로그아웃</UserMenu>
               <UserMenu onClick={handleDeleteUser}>회원탈퇴</UserMenu>
             </UserMenuWrap>
           </UserWrap>
-        ) : (
-          <LoginButton onClick={() => navigate('/login')}>
-            로그인 하기
-          </LoginButton>
         )}
       </HeaderWrap>
       {isOpen && <Overlay onClick={() => setIsOpen(false)} />}
@@ -95,18 +99,6 @@ function Header() {
     </HeaderContainer>
   );
 }
-
-export const HeaderContainer = styled.header`
-  position: fixed;
-  top: 0;
-  max-width: 44rem;
-  width: 100%;
-  background-color: white;
-  box-shadow:
-    0px 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0px 2px 4px -2px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-`;
 
 const HeaderWrap = styled.div`
   display: flex;
@@ -195,11 +187,6 @@ const UserMenu = styled.button`
   height: 4rem;
   color: white;
   border-top: 1px solid ${props => props.theme.colors.neutral5};
-`;
-
-const LoginButton = styled.button`
-  font-size: ${props => props.theme.sizes.s};
-  color: ${props => props.theme.colors.neutral1};
 `;
 
 const SearchBarWrap = styled.form`

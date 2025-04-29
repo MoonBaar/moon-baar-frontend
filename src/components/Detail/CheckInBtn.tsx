@@ -5,13 +5,15 @@ import {ReactComponent as Add} from '@/assets/img/add.svg';
 import {modalHeightL, modalHeightM} from '@/assets/data/constant';
 import {useGeoLocation} from '@/hooks/useGeoLocation';
 import {postVisit} from '@/apis/api/event';
+import {User} from '@/store/user';
 
 interface CheckInProps {
   id: number;
   isVisited: boolean;
+  user: User | null;
 }
 
-function CheckInBtn({id, isVisited}: CheckInProps) {
+function CheckInBtn({id, isVisited, user}: CheckInProps) {
   const {openModal} = useModalStore();
   const {location, error} = useGeoLocation();
   const [visit, setVisit] = useState<boolean>(isVisited);
@@ -39,16 +41,24 @@ function CheckInBtn({id, isVisited}: CheckInProps) {
   };
 
   const handleClick = () => {
-    openModal({
-      type: 'waiting',
-      height: modalHeightL,
-      title: '체크인 중...',
-      content: [
-        '기간 안에 해당 위치에 있으면 체크인이 완료됩니다.',
-        '동일한 행사는 하루에 한 번만 체크인 가능해요.',
-      ],
-    });
-    handleAuthVisited();
+    if (!user) {
+      openModal({
+        type: 'guest',
+        height: modalHeightM,
+        title: '로그인이 필요합니다',
+      });
+    } else {
+      openModal({
+        type: 'waiting',
+        height: modalHeightL,
+        title: '체크인 중...',
+        content: [
+          '기간 안에 해당 위치에 있으면 체크인이 완료됩니다.',
+          '동일한 행사는 하루에 한 번만 체크인 가능해요.',
+        ],
+      });
+      handleAuthVisited();
+    }
   };
 
   return (

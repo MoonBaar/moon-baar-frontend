@@ -6,6 +6,7 @@ import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import EventItemSkeleton from './EventItemSkeleton';
 import {EventListProps} from '@/assets/types/event';
+import {ErrorMessage} from '@/styles/common';
 
 interface EventParamsProps {
   query: string | null;
@@ -119,18 +120,6 @@ const EventListContainer = styled.div`
   height: 100%;
   padding: 0 1.6rem 0.1rem 1.6rem;
   gap: 1.2rem;
-`;
-
-export const ErrorMessage = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  margin-top: 8rem;
-  gap: 0.6rem;
-  font-size: ${props => props.theme.sizes.m};
 `;
 
 export default EventList;

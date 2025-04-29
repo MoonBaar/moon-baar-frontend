@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Layout from '@/components/common/Layout';
 import Footer from '@/components/common/Footer';
-import {Title} from './Event';
 import {searchHeight} from '@/assets/data/constant';
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import Header from '@/components/common/Header/Header';
@@ -11,6 +10,9 @@ import footprint from '@/assets/img/footprintMarker.svg';
 import debounce from '@/utils/debounce';
 import {boundsProps, footprintProps} from '@/assets/types/map';
 import MapEventItem from '@/components/Map/MapEventItem';
+import {useAuthStore} from '@/store/user';
+import {LoginMessage, Title} from '@/styles/common';
+import LoginButton from '@/components/common/LoginButton';
 
 function Home() {
   const mapRef = useRef<kakao.maps.Map>(null);
@@ -23,6 +25,7 @@ function Home() {
   const {data} = useGetFootPrints(boundsInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
+  const {user, isGuest} = useAuthStore();
 
   const handleIdle = useCallback(
     debounce(() => {
@@ -41,7 +44,6 @@ function Home() {
           minLng: sw.getLng(),
         };
 
-        // 기존 값과 같으면 setState 하지 않음
         if (
           prev.maxLat === newBounds.maxLat &&
           prev.minLat === newBounds.minLat &&
@@ -79,51 +81,63 @@ function Home() {
       <Layout headerHeight={searchHeight}>
         <MapContainer>
           <Title>나의 문화 발자국 지도</Title>
-          <MapWrap>
-            <Map
-              center={{lat: 37.566826, lng: 126.9786567}}
-              style={{width: '100%', height: '400px', borderRadius: '1rem'}}
-              level={9}
-              onCreate={map => {
-                mapRef.current = map;
-                kakao.maps.event.addListener(map, 'idle', handleIdle);
-                handleIdle();
-              }}
-              onClick={() => setIsOpen(false)}
-            >
-              {data?.events.map(event => (
-                <MapMarker
-                  key={event.id}
-                  position={{lat: event.latitude, lng: event.longitude}}
-                  image={{
-                    src: footprint,
-                    size: {
-                      width: 36,
-                      height: 46,
-                    },
-                  }}
-                  title={event.title}
-                  onClick={() => handleOnClick(event)}
-                />
-              ))}
-            </Map>
-            <FloatBox>
-              <div>
-                이번 달 발자국 수: <span>5</span>
-              </div>
-            </FloatBox>
-            <MapInfoBox $isOpen={isOpen}>
-              <MapInfoList>
-                {eventsInfo.map(event => (
-                  <MapEventItem key={event.id} event={event} />
+          {!user || isGuest ? (
+            <MapLoginMessage>
+              <div>로그인하고 발자국을 남겨보세요!</div>
+            </MapLoginMessage>
+          ) : (
+            <MapWrap>
+              <Map
+                center={{lat: 37.566826, lng: 126.9786567}}
+                style={{width: '100%', height: '400px', borderRadius: '1rem'}}
+                level={9}
+                onCreate={map => {
+                  mapRef.current = map;
+                  kakao.maps.event.addListener(map, 'idle', handleIdle);
+                  handleIdle();
+                }}
+                onClick={() => setIsOpen(false)}
+              >
+                {data?.events.map(event => (
+                  <MapMarker
+                    key={event.id}
+                    position={{lat: event.latitude, lng: event.longitude}}
+                    image={{
+                      src: footprint,
+                      size: {
+                        width: 36,
+                        height: 46,
+                      },
+                    }}
+                    title={event.title}
+                    onClick={() => handleOnClick(event)}
+                  />
                 ))}
-              </MapInfoList>
-            </MapInfoBox>
-          </MapWrap>
+              </Map>
+              <FloatBox>
+                <div>
+                  이번 달 발자국 수: <span>5</span>
+                </div>
+              </FloatBox>
+              <MapInfoBox $isOpen={isOpen}>
+                <MapInfoList>
+                  {eventsInfo.map(event => (
+                    <MapEventItem key={event.id} event={event} />
+                  ))}
+                </MapInfoList>
+              </MapInfoBox>
+            </MapWrap>
+          )}
         </MapContainer>
         <MonthlyContainer>
           <Title>이번달 방문한 문화행사</Title>
-          <MonthlyEventList></MonthlyEventList>
+          {!user || isGuest ? (
+            <LoginMessage>
+              <LoginButton comment='로그인이 필요해요' />
+            </LoginMessage>
+          ) : (
+            <MonthlyEventList></MonthlyEventList>
+          )}
         </MonthlyContainer>
       </Layout>
       <Footer />
@@ -196,6 +210,19 @@ const MapInfoList = styled.div`
   width: 100%;
   height: 100%;
   padding: 1.4rem;
+`;
+
+const MapLoginMessage = styled.div`
+  width: 100%;
+  height: 40rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  border: 1px solid ${props => props.theme.colors.neutral5};
+  background-color: ${props => props.theme.colors.neutral5};
+  opacity: 0.5;
+  font-size: ${props => props.theme.sizes.s};
 `;
 
 const MonthlyContainer = styled.div`

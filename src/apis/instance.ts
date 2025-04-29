@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {logout} from './api/users';
+import {useAuthStore} from '@/store/user';
 
 export const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -35,6 +36,11 @@ baseAPI.interceptors.response.use(
   async err => {
     const originalRequest = err.config;
 
+    const isRefreshRequest = originalRequest.url.includes('/users/refresh');
+    if (isRefreshRequest) {
+      return Promise.reject(err);
+    }
+
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -52,12 +58,6 @@ baseAPI.interceptors.response.use(
         return baseAPI(originalRequest);
       } catch (refreshError: any) {
         processQueue(refreshError, null);
-        const status = refreshError.response?.status;
-
-        if (status === 401 || status === 403) {
-          await logout();
-        }
-
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

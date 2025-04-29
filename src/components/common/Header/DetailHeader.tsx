@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import {HeaderContainer} from './Header';
 import {ReactComponent as Back} from '@/assets/img/back.svg';
 import {useNavigate} from 'react-router-dom';
+import {HeaderContainer} from '@/styles/common';
 
 function DetailHeader({name}: {name: string}) {
   const navigate = useNavigate();
