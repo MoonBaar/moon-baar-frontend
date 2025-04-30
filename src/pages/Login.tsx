@@ -14,6 +14,7 @@ function Login() {
 
   const handleOnClickGuest = () => {
     setIsGuest(true);
+    useAuthStore.getState().setUser(null);
     navigate('/event');
   };
   return (
