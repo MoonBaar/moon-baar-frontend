@@ -58,12 +58,20 @@ function EventItem({data}: ItemProps) {
         </EventPlace>
         <EventDate>
           <img src={date} alt='date' />
-          <div>{dateFormat()}</div>
+          {data.visitedAt ? (
+            <div>{data.visitedAt.split('T')[0]}</div>
+          ) : (
+            <div>{dateFormat()}</div>
+          )}
         </EventDate>
-        {data.isVisited !== undefined && data.isVisited ? (
-          <CheckInButton $checkIn={false}>방문완료</CheckInButton>
-        ) : (
-          <CheckInButton $checkIn={true}>방문하기</CheckInButton>
+        {data.isVisited !== undefined && (
+          <>
+            {data.isVisited ? (
+              <CheckInButton $checkIn={false}>방문완료</CheckInButton>
+            ) : (
+              <CheckInButton $checkIn={true}>방문하기</CheckInButton>
+            )}
+          </>
         )}
       </EventContent>
     </EventItemContainer>

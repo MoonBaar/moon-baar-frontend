@@ -6,6 +6,7 @@ import {getLikeList} from '@/apis/api/like';
 import {EventListProps} from '@/assets/types/event';
 import EventItem from '../Event/EventItem';
 import EventItemSkeleton from '../Event/EventItemSkeleton';
+import NoList from '../common/NoList';
 
 function LikeList() {
   const [ref, inView] = useInView();
@@ -36,7 +37,7 @@ function LikeList() {
   return (
     <Container>
       {data?.pages[0].totalCount === 0 ? (
-        <NoList>아직 관심있는 행사가 없어요.</NoList>
+        <NoList type='관심' />
       ) : (
         <>
           {status === 'pending' && (
@@ -66,15 +67,6 @@ function LikeList() {
 
 const Container = styled.div`
   margin-top: 1.6rem;
-`;
-
-const NoList = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20rem;
-  font-size: ${props => props.theme.sizes.l};
-  color: ${props => props.theme.colors.neutral2};
 `;
 
 export default LikeList;

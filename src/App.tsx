@@ -10,6 +10,7 @@ import Statistics from '@/pages/Statistics';
 import Login from './pages/Login';
 import LoginSuccess from './pages/LoginSuccess';
 import PrivateRoute from './components/common/PrivateRoute';
+import VisitedList from './pages/VisitedList';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path='/event/:id' element={<Detail />} />
           <Route path='/badge' element={<Badge />} />
           <Route path='/statistics' element={<Statistics />} />
+          <Route path='/visited/:range' element={<VisitedList />} />
         </Route>
       </Routes>
     </ThemeProvider>

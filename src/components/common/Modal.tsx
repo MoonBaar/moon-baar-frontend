@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import {useModalStore} from '@/store/modal';
 import {ReactComponent as Close} from '@/assets/img/close.svg';
 import LoginButton from './LoginButton';
+import Logo from '@/assets/img/moonbar.jpg';
 
 function Modal() {
   const {isOpen, data, closeModal} = useModalStore();
@@ -43,7 +44,7 @@ function Modal() {
         <Body>
           {data.img && (
             <ImgWrap>
-              <Img src={data.img} alt='logo' />
+              <Img src={Logo} alt='logo' />
             </ImgWrap>
           )}
           <TitleWrap>{data.title}</TitleWrap>

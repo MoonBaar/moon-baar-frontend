@@ -3,7 +3,7 @@ import {create} from 'zustand';
 interface ModalData {
   type: string;
   height: number;
-  img?: string;
+  img?: boolean;
   title: string;
   subtitle?: string;
   content?: string[];
