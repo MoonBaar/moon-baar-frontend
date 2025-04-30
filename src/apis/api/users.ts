@@ -2,6 +2,7 @@ import {useQuery} from '@tanstack/react-query';
 import {baseAPI, baseURL} from '../instance';
 import {useAuthStore, User} from '@/store/user';
 import {useEffect} from 'react';
+import {StatProps} from '@/assets/types/achievement';
 
 export const loginOauth = (provider: 'kakao' | 'naver') => {
   window.location.href = `${baseURL}/oauth2/authorization/${provider}`;
@@ -51,5 +52,14 @@ export const deleteUser = async () => {
   } finally {
     window.location.href = '/login';
     useAuthStore.getState().setUser(null);
+  }
+};
+
+export const getStatistics = async () => {
+  try {
+    const response = await baseAPI.get<StatProps>('/users/me/statistics');
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };

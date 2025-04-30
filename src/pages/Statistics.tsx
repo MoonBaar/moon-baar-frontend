@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import Achievement from '@/components/common/Achievement';
 import Count from '@/components/Statistics/Count';
 import LikeList from '@/components/Statistics/LikeList';
-import {getStatistics} from '@/apis/api/user';
+import {getStatistics} from '@/apis/api/users';
 import {useAuthStore} from '@/store/user';
 import {LoginMessage} from '@/styles/common';
 import LoginButton from '@/components/common/LoginButton';
@@ -25,46 +25,57 @@ function Statistics() {
         console.log('get statistics error', error);
       }
     };
-    getData();
-  }, []);
+    if (user) {
+      getData();
+    }
+  }, [user]);
 
   return (
     <>
       <Header />
       <Layout headerHeight={basicHeight}>
-        {user && stat ? (
+        {user ? (
           <>
-            <Box style={{paddingBottom: 0}}>
-              <Label>나의 발자국</Label>
-              <CountArea>
-                <Count title='총 방문 행사' count={stat.summary.totalVisits} />
-                <Count
-                  title='이번 달 방문'
-                  count={stat.summary.thisMonthVisits}
-                  isMonth={true}
-                />
-              </CountArea>
-              <AchievementArea>
-                <p>가장 많이 방문한 장르</p>
-                <Achievement color='#5676A5' data={stat.categories.top} />
-              </AchievementArea>
-              <AchievementArea>
-                <p>가장 많이 방문한 지역</p>
-                <Achievement color='#C1641E' data={stat.districts.top} />
-              </AchievementArea>
-              <GenresArea>
-                <p>방문한 장르</p>
-                <GenresBox>
-                  {stat.categories.all.map((item, idx) => (
-                    <GenreWrap key={idx}>{item}</GenreWrap>
-                  ))}
-                </GenresBox>
-              </GenresArea>
-            </Box>
-            <Box>
-              <Label>관심 행사</Label>
-              <LikeList />
-            </Box>
+            {stat && (
+              <>
+                <Box style={{paddingBottom: 0}}>
+                  <Label>나의 발자국</Label>
+                  <CountArea>
+                    <Count
+                      title='총 방문 행사'
+                      count={stat.summary.totalVisits}
+                      range='all'
+                    />
+                    <Count
+                      title='이번 달 방문'
+                      count={stat.summary.thisMonthVisits}
+                      isMonth={true}
+                      range='thisMonth'
+                    />
+                  </CountArea>
+                  <AchievementArea>
+                    <p>가장 많이 방문한 장르</p>
+                    <Achievement color='#5676A5' data={stat.categories.top} />
+                  </AchievementArea>
+                  <AchievementArea>
+                    <p>가장 많이 방문한 지역</p>
+                    <Achievement color='#C1641E' data={stat.districts.top} />
+                  </AchievementArea>
+                  <GenresArea>
+                    <p>방문한 장르</p>
+                    <GenresBox>
+                      {stat.categories.all.map((item, idx) => (
+                        <GenreWrap key={idx}>{item}</GenreWrap>
+                      ))}
+                    </GenresBox>
+                  </GenresArea>
+                </Box>
+                <Box>
+                  <Label>관심 행사</Label>
+                  <LikeList />
+                </Box>
+              </>
+            )}
           </>
         ) : (
           <LoginMessage>

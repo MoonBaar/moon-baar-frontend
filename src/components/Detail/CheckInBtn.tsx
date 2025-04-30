@@ -52,6 +52,7 @@ function CheckInBtn({id, isVisited, user}: CheckInProps) {
         type: 'waiting',
         height: modalHeightL,
         title: '체크인 중...',
+        img: true,
         content: [
           '기간 안에 해당 위치에 있으면 체크인이 완료됩니다.',
           '동일한 행사는 하루에 한 번만 체크인 가능해요.',

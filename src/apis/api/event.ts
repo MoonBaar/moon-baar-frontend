@@ -70,6 +70,7 @@ export const postVisit = async (
 ) => {
   try {
     const {data} = await baseAPI.post(`/events/${id}/visit`, {
+      timeout: 8000,
       latitude,
       longitude,
     });
@@ -77,5 +78,20 @@ export const postVisit = async (
     return data;
   } catch (error) {
     throw error instanceof AxiosError && error.response?.data.message;
+  }
+};
+
+export const getVisitList = async (page: number, period: string) => {
+  try {
+    const {data} = await baseAPI.get('/users/me/visits', {
+      params: {
+        page,
+        size: 10,
+        period,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
   }
 };

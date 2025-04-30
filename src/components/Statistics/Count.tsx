@@ -1,14 +1,18 @@
+import {useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 
 interface CountProps {
   title: string;
   count: number;
   isMonth?: boolean;
+  range: string;
 }
 
-function Count({title, count, isMonth = false}: CountProps) {
+function Count({title, count, range, isMonth = false}: CountProps) {
+  const navigate = useNavigate();
+
   return (
-    <CountWrap $isMonth={isMonth}>
+    <CountWrap $isMonth={isMonth} onClick={() => navigate(`/visited/${range}`)}>
       <p>{title}</p>
       {count}회
     </CountWrap>
