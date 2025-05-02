@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Achievement from '@/components/common/Achievement';
 import BadgeItem from '@/components/Badge/BadgeItem';
@@ -6,86 +6,48 @@ import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header/Header';
 import Layout from '@/components/common/Layout';
 import {basicHeight} from '@/assets/data/constant';
-import {AchievedProps} from '@/assets/types/achievement';
 import {useAuthStore} from '@/store/user';
 import {LoginMessage} from '@/styles/common';
 import LoginButton from '@/components/common/LoginButton';
-
-const dummy = [
-  {
-    id: 0,
-    isDone: true,
-    name: '첫 발자국',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 1,
-    isDone: true,
-    name: '공연 마니아',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 2,
-    isDone: false,
-    name: '전시 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 3,
-    isDone: true,
-    name: '서울 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 4,
-    isDone: false,
-    name: '서울 완전 정복',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 5,
-    isDone: false,
-    name: '공연 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 6,
-    isDone: true,
-    name: '뮤지컬 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 7,
-    isDone: false,
-    name: '미술 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-  {
-    id: 8,
-    isDone: false,
-    name: '클래식 탐험가',
-    img: 'https://i.pinimg.com/736x/e8/6b/ad/e86bad7bf215693ba10fb56ce073fe71.jpg',
-  },
-];
-
-export interface BadgeProps {
-  id?: number;
-  isDone: boolean;
-  name: string;
-  img: string;
-}
+import {BadgeProps, NextBadgeProps} from '@/assets/types/badge';
+import {getBadgeList, getNextGoal, useGetBadgeList} from '@/apis/api/users';
+import Popup from '@/components/common/Popup';
+import BadgeItemSkeleton from '@/components/Badge/BadgeItemSkeleton';
 
 function Badge() {
-  const [list, setList] = useState<BadgeProps[]>(dummy);
-  const [achieved, setAchieved] = useState<AchievedProps>({
-    name: '서울 완전 정복',
-    count: 14,
-    percentage: 70,
-  });
+  const [list, setList] = useState<BadgeProps[]>();
+  const [goal, setGoal] = useState<NextBadgeProps>();
   const {user, isGuest} = useAuthStore();
+  const {data, status} = useGetBadgeList();
+
+  useEffect(() => {
+    if (user) {
+      getGoal();
+      getBadge();
+    }
+  }, [user]);
+
+  const getGoal = async () => {
+    try {
+      const data = await getNextGoal();
+      setGoal(data);
+    } catch (error) {
+      console.log('get next goal error', error);
+    }
+  };
+
+  const getBadge = async () => {
+    try {
+      const data = await getBadgeList();
+      setList(data);
+    } catch (error) {
+      console.log('get badge list error', error);
+    }
+  };
 
   return (
     <>
+      <Popup />
       <Header />
       <Layout headerHeight={basicHeight}>
         {!user || isGuest ? (
@@ -97,24 +59,29 @@ function Badge() {
             <Box style={{paddingBottom: 0}}>
               <Label>다음 목표</Label>
               <Achievement
-                subtitle='서울 25개 구 모두 방문하기'
-                total={25}
+                subtitle={goal?.description || ''}
+                total={goal?.target || 0}
                 type='goal'
                 color='#5D9D8A'
-                data={achieved}
+                data={{
+                  name: goal?.name || '',
+                  count: goal?.progress || 0,
+                  percentage: goal ? (goal.progress / goal.target) * 100 : 0,
+                }}
               />
             </Box>
             <Box>
               <Label>나의 배지</Label>
               <BadgeListWrap>
-                {list.map(item => (
-                  <BadgeItem
-                    key={item.id}
-                    isDone={item.isDone}
-                    name={item.name}
-                    img={item.img}
-                  />
-                ))}
+                {status === 'pending' && (
+                  <>
+                    {Array.from({length: 9}).map((_, i) => (
+                      <BadgeItemSkeleton key={i} />
+                    ))}
+                  </>
+                )}
+                {list &&
+                  list.map(item => <BadgeItem key={item.id} data={item} />)}
               </BadgeListWrap>
             </Box>
           </>

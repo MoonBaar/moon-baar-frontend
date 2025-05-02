@@ -1,13 +1,28 @@
-import {BadgeProps} from '@/pages/Badge';
 import styled from 'styled-components';
+import {BadgeProps} from '@/assets/types/badge';
+import {usePopupStore} from '@/store/popup';
 
-function BadgeItem({isDone, name, img}: BadgeProps) {
+interface BadgeItemProps {
+  data: BadgeProps;
+}
+
+function BadgeItem({data}: BadgeItemProps) {
+  const {openPopup} = usePopupStore();
+
+  const handleClick = () => {
+    openPopup({
+      name: data.name,
+      imgUrl: data.imgUrl || '',
+      description: data.description,
+    });
+  };
+
   return (
-    <ItemWrap>
-      <ContentWrap $isDone={isDone}>
-        <ImgWrap src={img} />
+    <ItemWrap onClick={handleClick}>
+      <ContentWrap $isDone={data.owned}>
+        <ImgWrap src={data.imgUrl || ''} />
       </ContentWrap>
-      <NameWrap>{name}</NameWrap>
+      <NameWrap>{data.name}</NameWrap>
     </ItemWrap>
   );
 }
@@ -18,6 +33,7 @@ const ItemWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 `;
 
 const ContentWrap = styled.div<{$isDone: boolean}>`
@@ -40,8 +56,8 @@ const ContentWrap = styled.div<{$isDone: boolean}>`
 `;
 
 const ImgWrap = styled.img`
-  width: 6rem;
-  height: 6rem;
+  width: 7rem;
+  height: 7rem;
   object-fit: cover;
   border-radius: 50%;
 `;
