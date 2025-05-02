@@ -14,7 +14,7 @@ import {LoginMessage} from '@/styles/common';
 import LoginButton from '@/components/common/LoginButton';
 function Statistics() {
   const [stat, setStat] = useState<StatProps>();
-  const {user} = useAuthStore();
+  const {user, isGuest} = useAuthStore();
 
   useEffect(() => {
     const getData = async () => {
@@ -34,7 +34,7 @@ function Statistics() {
     <>
       <Header />
       <Layout headerHeight={basicHeight}>
-        {user ? (
+        {user && !isGuest ? (
           <>
             {stat && (
               <>
