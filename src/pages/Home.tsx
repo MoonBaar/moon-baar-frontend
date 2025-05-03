@@ -4,15 +4,19 @@ import Footer from '@/components/common/Footer';
 import {searchHeight} from '@/assets/data/constant';
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import Header from '@/components/common/Header/Header';
-import {useCallback, useRef, useState} from 'react';
-import {useGetFootPrints} from './../apis/api/event';
-import footprint from '@/assets/img/footprintMarker.svg';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {getVisitList, useGetFootPrints} from './../apis/api/event';
+import footprint from '@/assets/img/mapMarker.svg';
 import debounce from '@/utils/debounce';
 import {boundsProps, footprintProps} from '@/assets/types/map';
-import MapEventItem from '@/components/Map/MapEventItem';
+import MapEventItem from '@/components/Home/MapEventItem';
 import {useAuthStore} from '@/store/user';
 import {LoginMessage, Title} from '@/styles/common';
 import LoginButton from '@/components/common/LoginButton';
+import {useInView} from 'react-intersection-observer';
+import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
+import {EventListProps} from '@/assets/types/event';
+import MonthlyEventList from '@/components/Home/MontlyEventList';
 
 function Home() {
   const mapRef = useRef<kakao.maps.Map>(null);
@@ -22,10 +26,34 @@ function Home() {
     maxLng: null,
     minLng: null,
   });
-  const {data} = useGetFootPrints(boundsInfo);
+  const {data: footprints} = useGetFootPrints(boundsInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
   const {user, isGuest} = useAuthStore();
+  const [ref, inView] = useInView();
+
+  const getList = async ({pageParam}: QueryFunctionContext) => {
+    const data = await getVisitList(pageParam as number, 'thisMonth');
+    return data;
+  };
+
+  const {data, hasNextPage, isFetchingNextPage, fetchNextPage, status} =
+    useInfiniteQuery<EventListProps>({
+      queryKey: ['visits'],
+      queryFn: getList,
+      getNextPageParam: lastPage =>
+        lastPage.currentPage < lastPage.totalPages
+          ? lastPage.currentPage + 1
+          : undefined,
+      initialPageParam: 1,
+      retry: 0,
+    });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   const handleIdle = useCallback(
     debounce(() => {
@@ -62,7 +90,7 @@ function Home() {
   const handleOnClick = (event: footprintProps) => {
     if (!isOpen && mapRef.current) {
       const samePositionEvents =
-        data?.events.filter(
+        footprints?.events.filter(
           e => e.latitude === event.latitude && e.longitude === event.longitude,
         ) || [];
       setEventsInfo(samePositionEvents);
@@ -98,7 +126,7 @@ function Home() {
                 }}
                 onClick={() => setIsOpen(false)}
               >
-                {data?.events.map(event => (
+                {footprints?.events.map(event => (
                   <MapMarker
                     key={event.id}
                     position={{lat: event.latitude, lng: event.longitude}}
@@ -116,7 +144,7 @@ function Home() {
               </Map>
               <FloatBox>
                 <div>
-                  이번 달 발자국 수: <span>5</span>
+                  이번 달 발자국 수: <span>{data?.pages[0].totalCount}</span>
                 </div>
               </FloatBox>
               <MapInfoBox $isOpen={isOpen}>
@@ -136,7 +164,12 @@ function Home() {
               <LoginButton comment='로그인이 필요해요' />
             </LoginMessage>
           ) : (
-            <MonthlyEventList></MonthlyEventList>
+            <MonthlyEventList
+              data={data}
+              status={status}
+              isFetchingNextPage={isFetchingNextPage}
+              ref={ref}
+            />
           )}
         </MonthlyContainer>
       </Layout>
@@ -232,12 +265,6 @@ const MonthlyContainer = styled.div`
   gap: 1.2rem;
   width: 100%;
   padding: 0.4rem 1.6rem 1rem 1.6rem;
-`;
-
-const MonthlyEventList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 `;
 
 export default Home;
