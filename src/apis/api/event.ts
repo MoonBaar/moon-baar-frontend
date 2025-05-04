@@ -28,6 +28,21 @@ export const getEventList = async ({
   return data;
 };
 
+export const getEventListWithStatus = async ({
+  query,
+  page,
+  categoryId,
+  isFree,
+  districtId,
+  startDate,
+}: EventListParams): Promise<EventListProps> => {
+  const {data} = await baseAPI.get('/events/with-status', {
+    params: {query, page, categoryId, isFree, districtId, startDate},
+  });
+
+  return data;
+};
+
 const getEventDetail = async (id: number) => {
   const response = await baseAPI.get<EventDetailProps>(`/events/${id}`);
 

@@ -49,6 +49,9 @@ function EventItem({data}: ItemProps) {
             <FilterItem $isFilter={districtFilter !== null}>
               {data.district}
             </FilterItem>
+            {data.isVisited && (
+              <FilterItem $isFilter={false}>방문완료</FilterItem>
+            )}
           </FilterList>
         )}
         <EventTitle>{data.title}</EventTitle>
@@ -64,15 +67,6 @@ function EventItem({data}: ItemProps) {
             <div>{dateFormat()}</div>
           )}
         </EventDate>
-        {data.isVisited !== undefined && (
-          <>
-            {data.isVisited ? (
-              <CheckInButton $checkIn={false}>방문완료</CheckInButton>
-            ) : (
-              <CheckInButton $checkIn={true}>방문하기</CheckInButton>
-            )}
-          </>
-        )}
       </EventContent>
     </EventItemContainer>
   );
@@ -116,7 +110,7 @@ const FilterItem = styled.div<{$isFilter: boolean}>`
   padding: 0.4rem 0.8rem;
   font-size: ${props => props.theme.sizes.xs};
   background-color: ${props =>
-    props.$isFilter === true
+    props.$isFilter
       ? props.theme.colors.secondary
       : props.theme.colors.neutral5};
   color: ${props => props.theme.colors.primary};
@@ -145,20 +139,6 @@ const EventDate = styled.div`
   font-size: ${props => props.theme.sizes.s};
   line-height: 2rem;
   color: ${props => props.theme.colors.neutral2};
-`;
-
-const CheckInButton = styled.button<{$checkIn: boolean}>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.4rem 1.2rem;
-  font-size: ${props => props.theme.sizes.xs};
-  background-color: ${props =>
-    props.$checkIn ? props.theme.colors.primary : props.theme.colors.neutral4};
-  color: ${props => (props.$checkIn ? 'white' : props.theme.colors.primary)};
-  width: fit-content;
-  border-radius: 1.6rem;
-  margin: 0.4rem 0;
 `;
 
 export default EventItem;

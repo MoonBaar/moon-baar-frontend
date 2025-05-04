@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import {useEffect, useRef} from 'react';
-import {getEventList} from '@/apis/api/event';
+import {getEventList, getEventListWithStatus} from '@/apis/api/event';
 import EventItem from './EventItem';
 import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import EventItemSkeleton from './EventItemSkeleton';
 import {EventListProps} from '@/assets/types/event';
 import {ErrorMessage} from '@/styles/common';
+import {useAuthStore} from '@/store/user';
 
 interface EventParamsProps {
   query: string | null;
@@ -37,6 +38,7 @@ function EventList({
   const districtId = districtFilter?.id || null;
   const {ref, inView} = useInView();
   const listRef = useRef<HTMLDivElement>(null);
+  const {isGuest} = useAuthStore();
 
   useEffect(() => {
     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -53,14 +55,25 @@ function EventList({
         startDate,
       ],
       queryFn: async ({pageParam}: QueryFunctionContext) => {
-        return await getEventList({
-          query,
-          page: pageParam as number,
-          categoryId,
-          isFree,
-          districtId,
-          startDate,
-        });
+        if (isGuest) {
+          return await getEventList({
+            query,
+            page: pageParam as number,
+            categoryId,
+            isFree,
+            districtId,
+            startDate,
+          });
+        } else {
+          return await getEventListWithStatus({
+            query,
+            page: pageParam as number,
+            categoryId,
+            isFree,
+            districtId,
+            startDate,
+          });
+        }
       },
       getNextPageParam: lastPage =>
         lastPage.currentPage < lastPage.totalPages
