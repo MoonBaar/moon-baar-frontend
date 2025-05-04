@@ -23,7 +23,7 @@ function Info({data}: InfoProps) {
       const callback = (result: any, status: any) => {
         if (status === kakao.maps.services.Status.OK) {
           const arr = {...result};
-          setAddr(arr[0].road_address.address_name);
+          setAddr(arr[0].address.address_name);
         }
       };
 

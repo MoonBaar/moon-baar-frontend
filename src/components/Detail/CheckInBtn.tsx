@@ -1,22 +1,20 @@
 import styled from 'styled-components';
-import {useState} from 'react';
 import {useModalStore} from '@/store/modal';
 import {ReactComponent as Add} from '@/assets/img/add.svg';
 import {modalHeightL, modalHeightM} from '@/assets/data/constant';
 import {useGeoLocation} from '@/hooks/useGeoLocation';
 import {postVisit} from '@/apis/api/event';
 import {User} from '@/store/user';
+import Logo from '@/assets/img/moonbar.jpg';
 
 interface CheckInProps {
   id: number;
-  isVisited: boolean;
   user: User | null;
 }
 
-function CheckInBtn({id, isVisited, user}: CheckInProps) {
+function CheckInBtn({id, user}: CheckInProps) {
   const {openModal} = useModalStore();
   const {location, error} = useGeoLocation();
-  const [visit, setVisit] = useState<boolean>(isVisited);
 
   const handleAuthVisited = async () => {
     try {
@@ -28,7 +26,6 @@ function CheckInBtn({id, isVisited, user}: CheckInProps) {
           height: modalHeightM,
           title: '체크인 완료!',
         });
-        setVisit(true);
       }
     } catch (err) {
       openModal({
@@ -52,7 +49,7 @@ function CheckInBtn({id, isVisited, user}: CheckInProps) {
         type: 'waiting',
         height: modalHeightL,
         title: '체크인 중...',
-        img: true,
+        img: Logo,
         content: [
           '기간 안에 해당 위치에 있으면 체크인이 완료됩니다.',
           '동일한 행사는 하루에 한 번만 체크인 가능해요.',
@@ -64,15 +61,11 @@ function CheckInBtn({id, isVisited, user}: CheckInProps) {
 
   return (
     <BtnArea>
-      <BtnWrap disabled={visit} onClick={handleClick}>
-        {visit ? (
-          <TextWrap>방문 완료</TextWrap>
-        ) : (
-          <TextWrap>
-            <Add />
-            <p>방문 체크인 하기</p>
-          </TextWrap>
-        )}
+      <BtnWrap onClick={handleClick}>
+        <TextWrap>
+          <Add />
+          <p>방문 체크인 하기</p>
+        </TextWrap>
       </BtnWrap>
     </BtnArea>
   );

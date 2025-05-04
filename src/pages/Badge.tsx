@@ -9,13 +9,12 @@ import {basicHeight} from '@/assets/data/constant';
 import {useAuthStore} from '@/store/user';
 import {LoginMessage} from '@/styles/common';
 import LoginButton from '@/components/common/LoginButton';
-import {BadgeProps, NextBadgeProps} from '@/assets/types/badge';
-import {getBadgeList, getNextGoal, useGetBadgeList} from '@/apis/api/users';
+import {NextBadgeProps} from '@/assets/types/badge';
+import {getNextGoal, useGetBadgeList} from '@/apis/api/users';
 import Popup from '@/components/common/Popup';
 import BadgeItemSkeleton from '@/components/Badge/BadgeItemSkeleton';
 
 function Badge() {
-  const [list, setList] = useState<BadgeProps[]>();
   const [goal, setGoal] = useState<NextBadgeProps>();
   const {user, isGuest} = useAuthStore();
   const {data, status} = useGetBadgeList();
@@ -23,7 +22,6 @@ function Badge() {
   useEffect(() => {
     if (user) {
       getGoal();
-      getBadge();
     }
   }, [user]);
 
@@ -33,15 +31,6 @@ function Badge() {
       setGoal(data);
     } catch (error) {
       console.log('get next goal error', error);
-    }
-  };
-
-  const getBadge = async () => {
-    try {
-      const data = await getBadgeList();
-      setList(data);
-    } catch (error) {
-      console.log('get badge list error', error);
     }
   };
 
@@ -80,8 +69,8 @@ function Badge() {
                     ))}
                   </>
                 )}
-                {list &&
-                  list.map(item => <BadgeItem key={item.id} data={item} />)}
+                {data &&
+                  data.map(item => <BadgeItem key={item.id} data={item} />)}
               </BadgeListWrap>
             </Box>
           </>
