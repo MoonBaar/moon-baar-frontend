@@ -11,12 +11,21 @@ interface ImageProps {
   id: number;
   title: string;
   imageUrl: string;
+  isVisited: boolean;
   isLiked: boolean;
   category: string;
   user: User | null;
 }
 
-function MainImage({id, title, imageUrl, isLiked, category, user}: ImageProps) {
+function MainImage({
+  id,
+  title,
+  imageUrl,
+  isVisited,
+  isLiked,
+  category,
+  user,
+}: ImageProps) {
   const [like, setLike] = useState<boolean>(isLiked);
   const {openModal} = useModalStore();
 
@@ -76,7 +85,10 @@ function MainImage({id, title, imageUrl, isLiked, category, user}: ImageProps) {
           )}
         </ButtonWrap>
       </ButtonArea>
-      <CategoryWrap>{category}</CategoryWrap>
+      <LabelArea>
+        <LabelWrap>{category}</LabelWrap>
+        {isVisited && <LabelWrap>방문 완료</LabelWrap>}
+      </LabelArea>
     </Container>
   );
 }
@@ -107,15 +119,20 @@ const ButtonWrap = styled.button`
   padding: 0.8rem;
 `;
 
-const CategoryWrap = styled.div`
+const LabelArea = styled.div`
+  display: flex;
+  column-gap: 1rem;
   position: absolute;
+  bottom: 1.2rem;
+  left: 1.2rem;
+`;
+
+const LabelWrap = styled.div`
   background-color: ${props => props.theme.colors.primary};
   color: white;
   font-size: ${props => props.theme.sizes.xs};
   border-radius: 25px;
   padding: 0.5rem 1rem;
-  bottom: 1.2rem;
-  left: 1.2rem;
 `;
 
 export default MainImage;

@@ -89,3 +89,12 @@ export const getNextGoal = async () => {
     throw error;
   }
 };
+
+export const getNewBadgeList = async () => {
+  try {
+    const response = await baseAPI.post('/users/me/badges/new');
+    return getBadgeListWithImg(response.data.userBadges);
+  } catch (error) {
+    throw error;
+  }
+};

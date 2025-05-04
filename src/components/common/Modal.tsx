@@ -4,10 +4,12 @@ import {useEffect, useState} from 'react';
 import {useModalStore} from '@/store/modal';
 import {ReactComponent as Close} from '@/assets/img/close.svg';
 import LoginButton from './LoginButton';
-import Logo from '@/assets/img/moonbar.jpg';
+import {getNewBadgeList} from '@/apis/api/users';
+import {BadgeProps} from '@/assets/types/badge';
+import {modalHeightL} from '@/assets/data/constant';
 
 function Modal() {
-  const {isOpen, data, closeModal} = useModalStore();
+  const {isOpen, data, closeModal, enqueueBadge} = useModalStore();
   const [idx, setIdx] = useState(0);
   const [fade, setFade] = useState<'in' | 'out'>('in');
 
@@ -26,17 +28,43 @@ function Modal() {
         clearInterval(intervalId);
       };
     }
-  }, []);
+  }, [data]);
+
+  const getNewBadges = async () => {
+    try {
+      const data = await getNewBadgeList();
+      data.forEach((badge: BadgeProps) => {
+        enqueueBadge({
+          type: 'badge',
+          height: modalHeightL,
+          title: badge.name,
+          content: [badge.description],
+          img: badge.imgUrl,
+        });
+      });
+    } catch (error) {
+      console.log('get new badges error');
+    }
+  };
+
+  const handleClose = () => {
+    if (data?.type === 'success') {
+      closeModal();
+      getNewBadges();
+    } else {
+      closeModal();
+    }
+  };
 
   if (!isOpen || !data) return null;
 
   return ReactDOM.createPortal(
     <>
-      <Background onClick={closeModal} />
+      <Background onClick={handleClose} />
       <Container $height={data.height}>
         {data.type !== 'waiting' && (
           <Header>
-            <CloseBtn onClick={closeModal}>
+            <CloseBtn onClick={handleClose}>
               <Close />
             </CloseBtn>
           </Header>
@@ -44,7 +72,7 @@ function Modal() {
         <Body>
           {data.img && (
             <ImgWrap>
-              <Img src={Logo} alt='logo' />
+              <Img src={data.img} alt='logo' />
             </ImgWrap>
           )}
           <TitleWrap>{data.title}</TitleWrap>
