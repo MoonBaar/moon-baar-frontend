@@ -7,7 +7,7 @@ export const badgeImg = [
   {
     code: 'play_explorer',
     imgUrl:
-      'https://res.cloudinary.com/df6cxoj9b/image/upload/v1746102993/play_explorer_tsnxhs.png',
+      'https://res.cloudinary.com/df6cxoj9b/image/upload/v1746348255/play_explorer_dso6su.png',
   },
   {
     code: 'classic_explorer',
@@ -132,6 +132,6 @@ export const badgeImg = [
   {
     code: 'play_mania',
     imgUrl:
-      'https://res.cloudinary.com/df6cxoj9b/image/upload/v1746103014/play_mania_ldd5l4.png',
+      'https://res.cloudinary.com/df6cxoj9b/image/upload/v1746348254/play_mania_n9jyeu.png',
   },
 ];

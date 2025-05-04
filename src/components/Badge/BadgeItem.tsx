@@ -19,8 +19,8 @@ function BadgeItem({data}: BadgeItemProps) {
 
   return (
     <ItemWrap onClick={handleClick}>
-      <ContentWrap $isDone={data.owned}>
-        <ImgWrap src={data.imgUrl || ''} />
+      <ContentWrap $owned={data.owned}>
+        <ImgWrap src={data.imgUrl || ''} $owned={data.owned} />
       </ContentWrap>
       <NameWrap>{data.name}</NameWrap>
     </ItemWrap>
@@ -36,17 +36,17 @@ const ItemWrap = styled.div`
   cursor: pointer;
 `;
 
-const ContentWrap = styled.div<{$isDone: boolean}>`
+const ContentWrap = styled.div<{$owned: boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${props =>
-    props.$isDone
+    props.$owned
       ? props => props.theme.colors.secondary
       : props => props.theme.colors.neutral6};
   border: 1px solid
     ${props =>
-      props.$isDone
+      props.$owned
         ? props => props.theme.colors.neutral_green
         : props => props.theme.colors.neutral4};
   border-radius: 8px;
@@ -55,11 +55,12 @@ const ContentWrap = styled.div<{$isDone: boolean}>`
   margin-bottom: 0.5rem;
 `;
 
-const ImgWrap = styled.img`
+const ImgWrap = styled.img<{$owned: boolean}>`
   width: 7rem;
   height: 7rem;
   object-fit: cover;
   border-radius: 50%;
+  filter: ${props => (props.$owned ? 'grayscale(0)' : 'grayscale(1)')};
 `;
 
 const NameWrap = styled.p`
