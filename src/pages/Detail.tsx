@@ -36,15 +36,18 @@ function Detail() {
             <MainImage
               id={parseInt(id)}
               title={data.title}
+              isLiked={data.isLiked}
+              isVisited={data.isVisited}
               imageUrl={data.mainImg}
-              isVisited={true}
-              isLiked={false}
               category={data.category}
               user={user}
             />
             <Info data={data} />
             <CheckInBtn id={parseInt(id)} user={user} />
-            <VisitedStats visitCount={145} likeCount={30} />
+            <VisitedStats
+              visitCount={data.visitCount}
+              likeCount={data.likeCount}
+            />
             <FullImage imageUrl={data.mainImg} />
           </Layout>
         </>
