@@ -5,7 +5,7 @@ import {modalHeightL, modalHeightM} from '@/assets/data/constant';
 import {useGeoLocation} from '@/hooks/useGeoLocation';
 import {postVisit} from '@/apis/api/event';
 import {User} from '@/store/user';
-import Logo from '@/assets/img/moonbar.jpg';
+import Logo from '@/assets/img/logo.png';
 
 interface CheckInProps {
   id: number;

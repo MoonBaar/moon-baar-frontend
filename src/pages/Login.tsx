@@ -1,12 +1,12 @@
 import {emptyHeight} from '@/assets/data/constant';
 import Layout from '@/components/common/Layout';
 import styled from 'styled-components';
-import Moonbar from '@/assets/img/moonbar.jpg';
 import {ReactComponent as Kakao} from '@/assets/img/kakao.svg';
 import {ReactComponent as Naver} from '@/assets/img/naver.svg';
 import {loginOauth} from '@/apis/api/users';
 import {useNavigate} from 'react-router-dom';
 import {useAuthStore} from '@/store/user';
+import logo from '@/assets/img/logo.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ function Login() {
             <span>발</span>
           </Title>
         </TitleWrap>
-        <img src={Moonbar} alt='Moonbar' />
+        <img src={logo} alt='logo' />
         <LoginWrap>
           <LoginButton option='kakao' onClick={() => loginOauth('kakao')}>
             <Kakao width={22} height={22} />
@@ -52,11 +52,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   margin: auto;
-  gap: 3rem;
+  gap: 2rem;
 
   img {
-    width: 16rem;
-    height: 16rem;
+    width: 15rem;
+    height: 15rem;
   }
 `;
 
