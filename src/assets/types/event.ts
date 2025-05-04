@@ -8,8 +8,6 @@ export interface EventProps {
   endDate: string;
   isFree: boolean;
   mainImg: string;
-  latitude: number;
-  longitude: number;
   isVisited: boolean;
   visitedAt?: string;
 }
@@ -21,13 +19,10 @@ export interface EventDetailProps extends EventProps {
   etcDesc: string;
   orgName: string;
   orgLink: string;
+  latitude: number;
+  longitude: number;
   visitCount: number;
   likeCount: number;
-}
-
-export interface EventDetailStatusProps {
-  eventId: number;
-  isVisited: boolean;
   isLiked: boolean;
 }
 
