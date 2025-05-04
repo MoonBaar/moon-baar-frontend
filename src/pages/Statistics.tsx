@@ -21,6 +21,7 @@ function Statistics() {
       try {
         const data = await getStatistics();
         setStat(data);
+        console.log('get statistics', data);
       } catch (error) {
         console.log('get statistics error', error);
       }
@@ -61,14 +62,16 @@ function Statistics() {
                     <p>가장 많이 방문한 지역</p>
                     <Achievement color='#C1641E' data={stat.districts.top} />
                   </AchievementArea>
-                  <GenresArea>
-                    <p>방문한 장르</p>
-                    <GenresBox>
-                      {stat.categories.all.map((item, idx) => (
-                        <GenreWrap key={idx}>{item}</GenreWrap>
-                      ))}
-                    </GenresBox>
-                  </GenresArea>
+                  {stat.categories.all.length > 0 && (
+                    <GenresArea>
+                      <p>방문한 장르</p>
+                      <GenresBox>
+                        {stat.categories.all.map((item, idx) => (
+                          <GenreWrap key={idx}>{item}</GenreWrap>
+                        ))}
+                      </GenresBox>
+                    </GenresArea>
+                  )}
                 </Box>
                 <Box>
                   <Label>관심 행사</Label>
@@ -90,7 +93,7 @@ function Statistics() {
 
 const Box = styled.div`
   width: 100%;
-  padding: 3.2rem;
+  padding: 3rem;
 `;
 
 const Label = styled.h2`

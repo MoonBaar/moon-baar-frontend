@@ -5,11 +5,11 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import close from '@/assets/img/close.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {deleteUser, logout} from '@/apis/api/users';
-import moonbarIcon from '@/assets/img/moonbarIcon.jpg';
 import {useAuthStore} from '@/store/user';
 import profile from '@/assets/img/profile.svg';
 import {HeaderContainer, Overlay} from '@/styles/common';
 import LoginButton from '../LoginButton';
+import logo from '@/assets/img/logo.png';
 
 function Header() {
   const [inputValue, setInputValue] = useState('');
@@ -50,7 +50,7 @@ function Header() {
     <HeaderContainer>
       <HeaderWrap>
         <TitleWrap>
-          <img src={moonbarIcon} alt='moonbar' />
+          <img src={logo} alt='logo' />
           <Title>문발</Title>
         </TitleWrap>
         {!user || isGuest ? (
@@ -112,7 +112,7 @@ const HeaderWrap = styled.div`
 const TitleWrap = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
 
   img {
     width: 3.2rem;
