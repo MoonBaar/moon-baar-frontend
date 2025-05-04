@@ -43,8 +43,6 @@ export const useModalStore = create<ModalState>((set, get) => ({
           isOpen: true,
         });
       }
-    } else {
-      set({isOpen: false, data: null});
     }
   },
   enqueueBadge: (badge: ModalData) => {

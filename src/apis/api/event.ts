@@ -1,8 +1,13 @@
-import {EventDetailProps, EventListProps} from '@/assets/types/event';
+import {
+  EventDetailProps,
+  EventDetailStatusProps,
+  EventListProps,
+} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 import {useQuery} from '@tanstack/react-query';
 import {boundsProps, footprintListProps} from '@/assets/types/map';
 import {AxiosError} from 'axios';
+import {getEventDetailWithStatus} from '../services/event';
 
 interface EventListParams {
   query: string | null;
@@ -43,7 +48,7 @@ export const getEventListWithStatus = async ({
   return data;
 };
 
-const getEventDetail = async (id: number) => {
+export const getEventDetail = async (id: number) => {
   const response = await baseAPI.get<EventDetailProps>(`/events/${id}`);
 
   return response.data;
@@ -52,8 +57,19 @@ const getEventDetail = async (id: number) => {
 export const useGetEventDetail = (id: number) => {
   return useQuery({
     queryKey: ['info', id],
-    queryFn: () => getEventDetail(id),
+    queryFn: () => getEventDetailWithStatus(id),
   });
+};
+
+export const getEventDetailStatus = async (id: number) => {
+  try {
+    const res = await baseAPI.get<EventDetailStatusProps>(
+      `/events/${id}/user-status`,
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const fetchFootPrints = async (bounds: boundsProps) => {

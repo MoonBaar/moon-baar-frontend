@@ -21,9 +21,14 @@ export interface EventDetailProps extends EventProps {
   etcDesc: string;
   orgName: string;
   orgLink: string;
+  visitCount: number;
+  likeCount: number;
+}
+
+export interface EventDetailStatusProps {
+  eventId: number;
+  isVisited: boolean;
   isLiked: boolean;
-  visitCount?: number;
-  likeCount?: number;
 }
 
 export interface EventListProps {
