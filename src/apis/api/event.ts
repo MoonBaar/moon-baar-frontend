@@ -1,13 +1,9 @@
-import {
-  EventDetailProps,
-  EventDetailStatusProps,
-  EventListProps,
-} from '@/assets/types/event';
+import {EventDetailProps, EventListProps} from '@/assets/types/event';
 import {baseAPI} from '../instance';
 import {useQuery} from '@tanstack/react-query';
 import {boundsProps, footprintListProps} from '@/assets/types/map';
 import {AxiosError} from 'axios';
-import {getEventDetailWithStatus} from '../services/event';
+import {useAuthStore} from '@/store/user';
 
 interface EventListParams {
   query: string | null;
@@ -54,22 +50,27 @@ export const getEventDetail = async (id: number) => {
   return response.data;
 };
 
-export const useGetEventDetail = (id: number) => {
-  return useQuery({
-    queryKey: ['info', id],
-    queryFn: () => getEventDetailWithStatus(id),
-  });
+export const getEventDetailWithStatus = async (id: number) => {
+  const response = await baseAPI.get<EventDetailProps>(
+    `/events/with-status/${id}`,
+  );
+
+  return response.data;
 };
 
-export const getEventDetailStatus = async (id: number) => {
-  try {
-    const res = await baseAPI.get<EventDetailStatusProps>(
-      `/events/${id}/user-status`,
-    );
-    return res.data;
-  } catch (error) {
-    throw error;
-  }
+export const useGetEventDetail = (id: number) => {
+  const {isGuest} = useAuthStore();
+
+  return useQuery({
+    queryKey: ['info', id, isGuest],
+    queryFn: () => {
+      if (isGuest) {
+        return getEventDetail(id);
+      } else {
+        return getEventDetailWithStatus(id);
+      }
+    },
+  });
 };
 
 const fetchFootPrints = async (bounds: boundsProps) => {
