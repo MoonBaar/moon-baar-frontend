@@ -12,6 +12,14 @@ const queryClient = new QueryClient();
 window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
 window.Kakao.isInitialized();
 
+if (process.env.NODE_ENV === 'production') {
+  ['log', 'warn', 'error'].forEach(method => {
+    (console as any)[method] = () => {
+      /* no-op */
+    };
+  });
+}
+
 root.render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>

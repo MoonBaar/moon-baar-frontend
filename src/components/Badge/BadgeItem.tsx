@@ -20,7 +20,7 @@ function BadgeItem({data}: BadgeItemProps) {
   return (
     <ItemWrap onClick={handleClick}>
       <ContentWrap $owned={data.owned}>
-        <ImgWrap src={data.imgUrl || ''} $owned={data.owned} />
+        <ImgWrap src={data.imgUrl || ''} $owned={data.owned} loading='lazy' />
       </ContentWrap>
       <NameWrap>{data.name}</NameWrap>
     </ItemWrap>
