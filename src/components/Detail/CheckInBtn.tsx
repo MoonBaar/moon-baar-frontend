@@ -6,6 +6,7 @@ import {useGeoLocation} from '@/hooks/useGeoLocation';
 import {postVisit} from '@/apis/api/event';
 import {User} from '@/store/user';
 import Logo from '@/assets/img/logo.png';
+import {AxiosError} from 'axios';
 
 interface CheckInProps {
   id: number;
@@ -18,21 +19,20 @@ function CheckInBtn({id, user}: CheckInProps) {
 
   const handleAuthVisited = async () => {
     try {
-      if (error) throw error;
-      if (location) {
-        await postVisit(id, location.latitude, location.longitude);
-        openModal({
-          type: 'success',
-          height: modalHeightM,
-          title: '체크인 완료!',
-        });
-      }
+      if (error || !location)
+        throw new AxiosError('위치 정보를 가져올 수 없습니다.');
+      await postVisit(id, location.latitude, location.longitude);
+      openModal({
+        type: 'success',
+        height: modalHeightM,
+        title: '체크인 완료!',
+      });
     } catch (err) {
       openModal({
         type: 'fail',
         height: modalHeightM,
         title: '체크인에 실패했습니다.',
-        content: [err as string],
+        content: err instanceof AxiosError ? [err.message] : [err as string],
       });
     }
   };

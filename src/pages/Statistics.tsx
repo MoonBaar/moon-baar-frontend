@@ -21,7 +21,6 @@ function Statistics() {
       try {
         const data = await getStatistics();
         setStat(data);
-        console.log('get statistics', data);
       } catch (error) {
         console.log('get statistics error', error);
       }
