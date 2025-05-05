@@ -1,6 +1,4 @@
 import axios from 'axios';
-import {logout} from './api/users';
-import {useAuthStore} from '@/store/user';
 
 export const baseURL = process.env.REACT_APP_BASE_URL;
 
