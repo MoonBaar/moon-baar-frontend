@@ -70,6 +70,7 @@ export const useGetEventDetail = (id: number) => {
         return getEventDetailWithStatus(id);
       }
     },
+    staleTime: isGuest ? 1000 * 60 * 5 : 0,
   });
 };
 

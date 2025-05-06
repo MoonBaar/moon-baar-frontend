@@ -25,7 +25,6 @@ function LikeList() {
           ? lastPage.currentPage + 1
           : undefined,
       initialPageParam: 1,
-      retry: 0,
     });
 
   useEffect(() => {
