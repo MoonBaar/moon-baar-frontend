@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import {ReactComponent as Share} from '@/assets/img/share.svg';
 import {ReactComponent as Like} from '@/assets/img/like.svg';
-import {useState} from 'react';
 import {delLike, postLike} from '@/apis/api/like';
 import {useModalStore} from '@/store/modal';
 import {User} from '@/store/user';
 import {modalHeightM} from '@/assets/data/constant';
+import {useQueryClient} from '@tanstack/react-query';
 
 interface ImageProps {
   id: number;
@@ -26,8 +26,8 @@ function MainImage({
   category,
   user,
 }: ImageProps) {
-  const [like, setLike] = useState<boolean>(isLiked);
   const {openModal} = useModalStore();
+  const queryClient = useQueryClient();
 
   const handleLike = async () => {
     if (!user) {
@@ -37,17 +37,25 @@ function MainImage({
         title: '로그인이 필요합니다',
       });
     } else {
-      if (like) {
+      if (isLiked) {
         try {
           await delLike(id);
-          setLike(false);
+          queryClient.invalidateQueries({queryKey: ['info', id]});
+          queryClient.invalidateQueries({
+            queryKey: ['likes'],
+            refetchType: 'all',
+          });
         } catch (error) {
           console.log('delete like fail: ', error);
         }
       } else {
         try {
           await postLike(id);
-          setLike(true);
+          queryClient.invalidateQueries({queryKey: ['info', id]});
+          queryClient.invalidateQueries({
+            queryKey: ['likes'],
+            refetchType: 'all',
+          });
         } catch (error) {
           console.log('post like fail: ', error);
         }
@@ -78,7 +86,7 @@ function MainImage({
           <Share />
         </ButtonWrap>
         <ButtonWrap onClick={() => handleLike()}>
-          {like ? (
+          {isLiked ? (
             <Like stroke='#DB2777' fill='#DB2777' />
           ) : (
             <Like stroke='#374151' />

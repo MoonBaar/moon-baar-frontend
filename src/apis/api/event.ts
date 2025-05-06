@@ -70,6 +70,7 @@ export const useGetEventDetail = (id: number) => {
         return getEventDetailWithStatus(id);
       }
     },
+    staleTime: isGuest ? 1000 * 60 * 5 : 0,
   });
 };
 
@@ -85,7 +86,7 @@ const fetchFootPrints = async (bounds: boundsProps) => {
 
 export const useGetFootPrints = (bounds: boundsProps) => {
   return useQuery({
-    queryKey: ['events', bounds],
+    queryKey: ['footprints', bounds],
     queryFn: () => fetchFootPrints(bounds),
     enabled:
       bounds.maxLat !== null &&
@@ -102,7 +103,7 @@ export const postVisit = async (
 ) => {
   try {
     const {data} = await baseAPI.post(`/events/${id}/visit`, {
-      timeout: 8000,
+      timeout: 20000,
       latitude,
       longitude,
     });
