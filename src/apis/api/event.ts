@@ -86,7 +86,7 @@ const fetchFootPrints = async (bounds: boundsProps) => {
 
 export const useGetFootPrints = (bounds: boundsProps) => {
   return useQuery({
-    queryKey: ['events', bounds],
+    queryKey: ['footprints', bounds],
     queryFn: () => fetchFootPrints(bounds),
     enabled:
       bounds.maxLat !== null &&

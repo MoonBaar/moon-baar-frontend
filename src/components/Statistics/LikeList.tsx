@@ -31,7 +31,7 @@ function LikeList() {
     if (inView) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [fetchNextPage, inView]);
 
   return (
     <Container>
