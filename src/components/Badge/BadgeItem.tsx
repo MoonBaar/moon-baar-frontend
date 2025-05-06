@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import {BadgeProps} from '@/assets/types/badge';
 import {usePopupStore} from '@/store/popup';
+import {useEffect, useState} from 'react';
+import {SkeletonImage} from './BadgeItemSkeleton';
 
 interface BadgeItemProps {
   data: BadgeProps;
@@ -8,6 +10,13 @@ interface BadgeItemProps {
 
 function BadgeItem({data}: BadgeItemProps) {
   const {openPopup} = usePopupStore();
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setLoaded(true);
+    img.src = data.imgUrl || '';
+  }, [data.imgUrl]);
 
   const handleClick = () => {
     openPopup({
@@ -20,7 +29,11 @@ function BadgeItem({data}: BadgeItemProps) {
   return (
     <ItemWrap onClick={handleClick}>
       <ContentWrap $owned={data.owned}>
-        <ImgWrap src={data.imgUrl || ''} $owned={data.owned} loading='lazy' />
+        {loaded ? (
+          <ImgWrap src={data.imgUrl || ''} $owned={data.owned} loading='lazy' />
+        ) : (
+          <SkeletonImage />
+        )}
       </ContentWrap>
       <NameWrap>{data.name}</NameWrap>
     </ItemWrap>

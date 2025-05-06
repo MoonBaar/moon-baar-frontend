@@ -31,7 +31,7 @@ const SkeletonContent = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const SkeletonImage = styled.div`
+export const SkeletonImage = styled.div`
   width: 7rem;
   height: 7rem;
   border-radius: 50%;
