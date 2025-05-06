@@ -102,7 +102,7 @@ export const postVisit = async (
 ) => {
   try {
     const {data} = await baseAPI.post(`/events/${id}/visit`, {
-      timeout: 8000,
+      timeout: 20000,
       latitude,
       longitude,
     });

@@ -18,7 +18,7 @@ function LikeList() {
 
   const {data, isFetchingNextPage, fetchNextPage, status} =
     useInfiniteQuery<EventListProps>({
-      queryKey: ['events'],
+      queryKey: ['likes'],
       queryFn: getList,
       getNextPageParam: lastPage =>
         lastPage.currentPage < lastPage.totalPages
