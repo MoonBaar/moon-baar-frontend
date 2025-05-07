@@ -158,7 +158,7 @@ function Home() {
           )}
         </MapContainer>
         <MonthlyContainer>
-          <Title>이번달 방문한 문화행사</Title>
+          <Title>이번 달 방문한 문화행사</Title>
           {!user || isGuest ? (
             <LoginMessage>
               <LoginButton comment='로그인이 필요해요' />

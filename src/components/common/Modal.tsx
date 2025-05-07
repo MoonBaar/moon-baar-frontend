@@ -48,7 +48,8 @@ function Modal() {
   };
 
   const handleClose = () => {
-    if (data?.type === 'success') {
+    if (data?.type === 'waiting') return;
+    else if (data?.type === 'success') {
       closeModal();
       getNewBadges();
     } else {
