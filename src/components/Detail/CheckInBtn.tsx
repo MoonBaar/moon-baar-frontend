@@ -17,7 +17,12 @@ function CheckInBtn({id, user}: CheckInProps) {
   const {openModal} = useModalStore();
   const {location, error} = useGeoLocation();
 
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   const handleAuthVisited = async () => {
+    await sleep(2000);
     try {
       if (error || !location)
         throw new AxiosError('위치 정보를 가져올 수 없습니다.');

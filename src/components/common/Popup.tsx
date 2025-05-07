@@ -49,7 +49,7 @@ const Container = styled.div`
 
   @keyframes popupEffect {
     from {
-      bottom: -${basicHeight};
+      bottom: 0;
     }
     to {
       bottom: ${basicHeight};
