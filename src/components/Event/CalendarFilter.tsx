@@ -9,13 +9,13 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 interface CalendarFilterProps {
   startDate: string | null;
   setStartDate: (date: string | null) => void;
-  setOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function CalendarFilter({
   startDate,
   setStartDate,
-  setOpenCalendar,
+  setIsOpenCalendar,
 }: CalendarFilterProps) {
   const handleDateChange = (newDate: Value) => {
     if (newDate instanceof Date) {
@@ -24,7 +24,7 @@ function CalendarFilter({
     } else {
       setStartDate(null);
     }
-    setOpenCalendar(false);
+    setIsOpenCalendar(false);
   };
 
   return (
@@ -36,17 +36,19 @@ function CalendarFilter({
         formatDay={(locale, date) => moment(date).format('D')}
         formatYear={(locale, date) => moment(date).format('YYYY')}
         formatMonthYear={(locale, date) => moment(date).format('YYYY년 MM월')}
-        calendarType='gregory' // 일요일 부터 시작
-        showNeighboringMonth={false} // 전달, 다음달 날짜 숨기기
-        next2Label={null} // +1년 & +10년 이동 버튼 숨기기
-        prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
-        minDetail='year' // 10년단위 년도 숨기기
+        calendarType='gregory'
+        showNeighboringMonth={false}
+        next2Label={null}
+        prev2Label={null}
+        minDetail='year'
       />
     </StyledCalendarWrapper>
   );
 }
 
 const StyledCalendarWrapper = styled.div`
+  padding: 0 0.8rem;
+
   .react-calendar {
     width: 100%;
     border: 1px solid ${props => props.theme.colors.neutral5};

@@ -8,7 +8,6 @@ import {
   DropDownImage,
   FilterItemContainer,
   Overlay,
-  SvgImg,
   TriggerButton,
 } from '@/styles/common';
 
