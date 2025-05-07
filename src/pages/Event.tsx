@@ -23,7 +23,6 @@ import close from '@/assets/img/close.svg';
 import {
   CloseImage,
   DropDownImage,
-  FilterItemContainer,
   SvgImg,
   Title,
   TriggerButton,
@@ -45,11 +44,11 @@ function Event() {
     resetAllFilters,
   } = useEventFilterStore();
   const {isOpen, toggleIsOpen} = useIsOpenStore();
-  const [openCalendar, setOpenCalendar] = useState(false);
+  const [isOpenCalendar, setIsOpenCalendar] = useState(false);
   const {scrollY} = useScrollStore();
 
   const handleReset = (e: React.MouseEvent) => {
-    setOpenCalendar(false);
+    setIsOpenCalendar(false);
     resetStartDate();
     e.stopPropagation();
   };
@@ -92,26 +91,26 @@ function Event() {
                 options={categoryOption.map(option => option)}
                 selectedValue={categoryFilter}
                 onSelect={setCategoryFilter}
-                setOpenCalendar={setOpenCalendar}
+                setOpenCalendar={setIsOpenCalendar}
               />
               <FilterItem
                 label='유/무료'
                 options={isFreeOption.map(option => option)}
                 selectedValue={isFreeFilter}
                 onSelect={setIsFreeFilter}
-                setOpenCalendar={setOpenCalendar}
+                setOpenCalendar={setIsOpenCalendar}
               />
               <FilterItem
                 label='자치구'
                 options={districtOption.map(option => option)}
                 selectedValue={districtFilter}
                 onSelect={setDistrictFilter}
-                setOpenCalendar={setOpenCalendar}
+                setOpenCalendar={setIsOpenCalendar}
               />
-              <FilterItemContainer>
+              <>
                 <TriggerButton
                   $isSelectedValue={startDate !== null}
-                  onClick={() => setOpenCalendar(prev => !prev)}
+                  onClick={() => setIsOpenCalendar(prev => !prev)}
                 >
                   {startDate ? (
                     <>
@@ -129,14 +128,14 @@ function Event() {
                     </>
                   )}
                 </TriggerButton>
-                <CalendarOption $isOpen={openCalendar}>
+                <CalendarOption $isOpenCalendar={isOpenCalendar}>
                   <CalendarFilter
                     startDate={startDate}
                     setStartDate={setStartDate}
-                    setOpenCalendar={setOpenCalendar}
+                    setIsOpenCalendar={setIsOpenCalendar}
                   />
                 </CalendarOption>
-              </FilterItemContainer>
+              </>
             </FilterListContainer>
           </ListHeader>
           <EventList
@@ -235,16 +234,16 @@ const CalendarImage = styled(SvgImg)`
   margin-left: 0.2rem;
 `;
 
-const CalendarOption = styled.div<{$isOpen: boolean}>`
-  width: 90%;
+const CalendarOption = styled.div<{$isOpenCalendar: boolean}>`
   background-color: white;
-  position: relative;
-  top: 0.2rem;
+  position: static;
+  width: 100%;
+  padding-right: 0.8rem;
 
-  max-height: ${({$isOpen}) => ($isOpen ? 'max-content' : '0')};
-  opacity: ${({$isOpen}) => ($isOpen ? '1' : '0')};
+  max-height: ${({$isOpenCalendar}) => ($isOpenCalendar ? 'max-content' : '0')};
+  opacity: ${({$isOpenCalendar}) => ($isOpenCalendar ? '1' : '0')};
   transition: all 0.3s ease-in-out;
-  pointer-events: ${({$isOpen}) => ($isOpen ? 'auto' : 'none')};
+  pointer-events: ${({$isOpenCalendar}) => ($isOpenCalendar ? 'auto' : 'none')};
 `;
 
 export default Event;
