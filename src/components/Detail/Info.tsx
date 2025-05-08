@@ -112,7 +112,11 @@ const InfoWrap = styled.div`
   }
 `;
 
-const PlaceLink = styled.a``;
+const PlaceLink = styled.a`
+  p {
+    text-decoration: underline;
+  }
+`;
 
 const OrgLink = styled.a`
   color: ${props => props.theme.colors.primary};

@@ -4,6 +4,7 @@ import date from '@/assets/img/date.svg';
 import {useNavigate} from 'react-router-dom';
 import {EventProps} from '@/assets/types/event';
 import {useEventFilterStore, useScrollStore} from '@/store/eventList';
+import noImage from '@/assets/img/noImage.png';
 
 interface ItemProps {
   data: EventProps;
@@ -36,6 +37,9 @@ function EventItem({data}: ItemProps) {
         src={data.mainImg}
         alt='mainImage'
         $isSimple={data.category === undefined}
+        onError={e => {
+          e.currentTarget.src = noImage;
+        }}
       />
       <EventContent>
         {data.category && (
