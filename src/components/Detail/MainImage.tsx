@@ -6,6 +6,7 @@ import {useModalStore} from '@/store/modal';
 import {User} from '@/store/user';
 import {modalHeightM} from '@/assets/data/constant';
 import {useQueryClient} from '@tanstack/react-query';
+import noImage from '@/assets/img/noImage.png';
 
 interface ImageProps {
   id: number;
@@ -81,6 +82,14 @@ function MainImage({
 
   return (
     <Container $img={imageUrl}>
+      <StyledImage
+        src={imageUrl}
+        alt='mainImage'
+        onError={e => {
+          e.currentTarget.src = noImage;
+        }}
+      />
+      <ShadowOverlay />
       <ButtonArea>
         <ButtonWrap onClick={() => handleShare()}>
           <Share />
@@ -105,10 +114,21 @@ const Container = styled.div<{$img: string}>`
   width: 100%;
   height: 25rem;
   position: relative;
-  background-image: url(${props => props.$img});
-  background-size: cover;
-  background-position-y: center;
+`;
+
+const StyledImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+`;
+
+const ShadowOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   box-shadow: inset 0px 30px 30px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 `;
 
 const ButtonArea = styled.div`
@@ -117,6 +137,7 @@ const ButtonArea = styled.div`
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
+  z-index: 2;
 `;
 
 const ButtonWrap = styled.button`

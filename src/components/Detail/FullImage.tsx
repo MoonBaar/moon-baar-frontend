@@ -1,6 +1,26 @@
+import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 function FullImage({imageUrl}: {imageUrl: string}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    if (!imageUrl) {
+      setHasError(true);
+      return;
+    }
+
+    const img = new Image();
+    img.src = imageUrl;
+
+    img.onload = () => setIsLoaded(true);
+    img.onerror = () => setHasError(true);
+  }, [imageUrl]);
+
+  if (hasError) return null;
+  if (!isLoaded) return null;
+
   return (
     <Container>
       <Title>상세 이미지</Title>
