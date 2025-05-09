@@ -3,7 +3,8 @@ import Layout from '@/components/common/Layout';
 import styled from 'styled-components';
 import {ReactComponent as Kakao} from '@/assets/img/kakao.svg';
 import {ReactComponent as Naver} from '@/assets/img/naver.svg';
-import {loginOauth} from '@/apis/api/users';
+import {ReactComponent as TestUser} from '@/assets/img/users.svg';
+import {loginOauth, loginTest} from '@/apis/api/users';
 import {useNavigate} from 'react-router-dom';
 import {useAuthStore} from '@/store/user';
 import logo from '@/assets/img/logo.png';
@@ -36,6 +37,10 @@ function Login() {
           <LoginButton option='naver' onClick={() => loginOauth('naver')}>
             <Naver width={18} height={18} />
             <div>네이버로 시작하기</div>
+          </LoginButton>
+          <LoginButton option='test' onClick={() => loginTest()}>
+            <TestUser width={25} height={25} />
+            <div>테스트 유저로 시작하기</div>
           </LoginButton>
           <GuestButton onClick={handleOnClickGuest}>앱 둘러보기</GuestButton>
         </LoginWrap>
@@ -100,13 +105,22 @@ const LoginButton = styled.button<{option: string}>`
   align-items: center;
   gap: 2rem;
   background-color: ${props =>
-    props.option === 'kakao' ? '#FEE500' : '#03C75A'};
+    props.option === 'kakao'
+      ? '#FEE500'
+      : props.option === 'naver'
+        ? '#03C75A'
+        : '#e3e3e3'};
   border-radius: 0.4rem;
 
   div {
     font-size: ${props => props.theme.sizes.s};
     font-weight: 500;
-    color: ${props => props.option === 'naver' && '#ffffff'};
+    color: ${props =>
+      props.option === 'naver'
+        ? '#ffffff'
+        : props.option === 'test'
+          ? '#444954'
+          : 'inherit'};
   }
 `;
 
