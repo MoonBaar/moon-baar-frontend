@@ -5,24 +5,29 @@ import BadgeItem from '@/components/Badge/BadgeItem';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/Header/Header';
 import Layout from '@/components/common/Layout';
+import LoginButton from '@/components/common/LoginButton';
+import Popup from '@/components/common/Popup';
 import {basicHeight} from '@/assets/data/constant';
 import {useAuthStore} from '@/store/user';
 import {LoginMessage} from '@/styles/common';
-import LoginButton from '@/components/common/LoginButton';
 import {NextBadgeProps} from '@/assets/types/badge';
 import {getNextGoal, useGetBadgeList} from '@/apis/api/users';
-import Popup from '@/components/common/Popup';
 import BadgeItemSkeleton from '@/components/Badge/BadgeItemSkeleton';
+import {usePopupStore} from '@/store/popup';
 
 function Badge() {
   const [goal, setGoal] = useState<NextBadgeProps>();
   const {user, isGuest} = useAuthStore();
   const {data, status} = useGetBadgeList();
+  const {closePopup} = usePopupStore();
 
   useEffect(() => {
     if (user) {
       getGoal();
     }
+    return () => {
+      closePopup();
+    };
   }, [user]);
 
   const getGoal = async () => {

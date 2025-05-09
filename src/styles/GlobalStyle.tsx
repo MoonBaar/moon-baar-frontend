@@ -37,6 +37,10 @@ const GlobalStyle = createGlobalStyle`
     main {
         background-color: #fff;
     }
+        
+    ::-webkit-scrollbar {
+        display: none;
+    }
 
     @media screen and (max-width: 440px) {
         body {

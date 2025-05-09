@@ -1,10 +1,19 @@
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
+import {useEffect} from 'react';
 import {basicHeight} from '@/assets/data/constant';
 import {usePopupStore} from '@/store/popup';
 
 function Popup() {
   const {isOpen, data, closePopup} = usePopupStore();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isOpen]);
 
   if (!isOpen || !data) return null;
 
