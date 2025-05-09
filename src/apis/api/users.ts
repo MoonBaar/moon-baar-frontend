@@ -9,6 +9,10 @@ export const loginOauth = (provider: 'kakao' | 'naver') => {
   window.location.href = `${baseURL}/oauth2/authorization/${provider}`;
 };
 
+export const loginTest = () => {
+  window.location.href = `${baseURL}/test/login`;
+};
+
 const fetchUser = async (): Promise<User> => {
   const response = await baseAPI.get('/users/me');
   return response.data;
