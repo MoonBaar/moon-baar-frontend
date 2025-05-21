@@ -31,6 +31,15 @@ function Home() {
   const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
   const {user, isGuest} = useAuthStore();
   const [ref, inView] = useInView();
+  const [currentFootprints, setCurrentFootprints] = useState<footprintProps[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (footprints && currentFootprints !== footprints.events) {
+      setCurrentFootprints(footprints.events);
+    }
+  }, [footprints, currentFootprints]);
 
   const getList = async ({pageParam}: QueryFunctionContext) => {
     const data = await getVisitList(pageParam as number, 'thisMonth');
@@ -53,7 +62,7 @@ function Home() {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
   const handleIdle = useCallback(
     debounce(() => {
@@ -126,7 +135,7 @@ function Home() {
                 }}
                 onClick={() => setIsOpen(false)}
               >
-                {footprints?.events.map(event => (
+                {currentFootprints.map(event => (
                   <MapMarker
                     key={event.id}
                     position={{lat: event.latitude, lng: event.longitude}}
