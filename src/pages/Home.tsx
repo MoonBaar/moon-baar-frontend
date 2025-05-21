@@ -17,6 +17,7 @@ import {useInView} from 'react-intersection-observer';
 import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import {EventListProps} from '@/assets/types/event';
 import MonthlyEventList from '@/components/Home/MontlyEventList';
+import {useEventsInfoStore, useInfoBoxStore, useMapStore} from '@/store/map';
 
 function Home() {
   const mapRef = useRef<kakao.maps.Map>(null);
@@ -27,13 +28,15 @@ function Home() {
     minLng: null,
   });
   const {data: footprints} = useGetFootPrints(boundsInfo);
-  const [isOpen, setIsOpen] = useState(false);
-  const [eventsInfo, setEventsInfo] = useState<footprintProps[]>([]);
+  const {isOpen, setIsOpen} = useInfoBoxStore();
+  const {eventsInfo, setEventsInfo} = useEventsInfoStore();
   const {user, isGuest} = useAuthStore();
   const [ref, inView] = useInView();
   const [currentFootprints, setCurrentFootprints] = useState<footprintProps[]>(
     [],
   );
+  const {latitude, longitude, level, setLatitude, setLongitude, setLevel} =
+    useMapStore();
 
   useEffect(() => {
     if (footprints && currentFootprints !== footprints.events) {
@@ -73,25 +76,26 @@ function Home() {
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
 
-      setBoundsInfo(prev => {
-        const newBounds = {
-          maxLat: ne.getLat(),
-          minLat: sw.getLat(),
-          maxLng: ne.getLng(),
-          minLng: sw.getLng(),
-        };
+      const newBounds = {
+        maxLat: ne.getLat(),
+        minLat: sw.getLat(),
+        maxLng: ne.getLng(),
+        minLng: sw.getLng(),
+      };
 
-        if (
-          prev.maxLat === newBounds.maxLat &&
-          prev.minLat === newBounds.minLat &&
-          prev.maxLng === newBounds.maxLng &&
-          prev.minLng === newBounds.minLng
-        ) {
-          return prev;
-        }
-
-        return newBounds;
-      });
+      if (
+        boundsInfo.maxLat === newBounds.maxLat &&
+        boundsInfo.minLat === newBounds.minLat &&
+        boundsInfo.maxLng === newBounds.maxLng &&
+        boundsInfo.minLng === newBounds.minLng
+      ) {
+        return;
+      } else {
+        setBoundsInfo(newBounds);
+        setLatitude(map.getCenter().getLat());
+        setLongitude(map.getCenter().getLng());
+        setLevel(map.getLevel());
+      }
     }, 300),
     [],
   );
@@ -109,7 +113,11 @@ function Home() {
       );
       mapRef.current.setLevel(4);
     }
-    setIsOpen(prev => !prev);
+    setLatitude(event.latitude);
+    setLongitude(event.longitude);
+    setLevel(4);
+
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -125,9 +133,9 @@ function Home() {
           ) : (
             <MapWrap>
               <Map
-                center={{lat: 37.566826, lng: 126.9786567}}
+                center={{lat: latitude, lng: longitude}}
                 style={{width: '100%', height: '400px', borderRadius: '1rem'}}
-                level={9}
+                level={level}
                 onCreate={map => {
                   mapRef.current = map;
                   kakao.maps.event.addListener(map, 'idle', handleIdle);
