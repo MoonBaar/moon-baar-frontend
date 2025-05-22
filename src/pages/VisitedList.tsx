@@ -11,6 +11,7 @@ import EventItemSkeleton from '@/components/Event/EventItemSkeleton';
 import EventItem from '@/components/Event/EventItem';
 import Layout from '@/components/common/Layout';
 import {basicHeight, emptyHeight} from '@/assets/data/constant';
+import {useScrollStore} from '@/store/eventList';
 
 const getTitle = (range: string) => {
   switch (range) {
@@ -27,6 +28,7 @@ function VisitedList() {
   const range = useParams().range || 'all';
   const title = getTitle(range || '');
   const [ref, inView] = useInView();
+  const {scrollY} = useScrollStore();
 
   const getList = async ({pageParam}: QueryFunctionContext) => {
     const data = await getVisitList(pageParam as number, range);
@@ -43,6 +45,12 @@ function VisitedList() {
           : undefined,
       initialPageParam: 1,
     });
+
+  useEffect(() => {
+    if (scrollY! == 0) {
+      window.scrollTo(0, scrollY);
+    }
+  }, [scrollY]);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
