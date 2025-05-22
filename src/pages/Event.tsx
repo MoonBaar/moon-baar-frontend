@@ -54,7 +54,7 @@ function Event() {
   };
 
   useEffect(() => {
-    if (scrollY) {
+    if (scrollY !== 0) {
       window.scrollTo(0, scrollY);
     }
   }, [scrollY]);

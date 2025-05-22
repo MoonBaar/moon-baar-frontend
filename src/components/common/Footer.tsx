@@ -5,38 +5,46 @@ import badge from '@/assets/img/badge.svg';
 import statistics from '@/assets/img/statistics.svg';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {useRef} from 'react';
+import {useScrollStore} from '@/store/eventList';
 
 function Footer() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = useRef(location.pathname);
+  const {setScrollY} = useScrollStore();
+
+  const handleNavigation = (path: string) => {
+    setScrollY(0);
+    window.scrollTo(0, 0);
+    navigate(path);
+  };
 
   return (
     <FooterContainer>
       <NavItem
         $fillcolor={currentPath.current === '/'}
-        onClick={() => navigate('/')}
+        onClick={() => handleNavigation('/')}
       >
         <img src={map} alt='map' />
         <div>지도</div>
       </NavItem>
       <NavItem
         $fillcolor={currentPath.current === '/event'}
-        onClick={() => navigate('/event')}
+        onClick={() => handleNavigation('/event')}
       >
         <img src={event} alt='event' />
         <div>행사</div>
       </NavItem>
       <NavItem
         $fillcolor={currentPath.current === '/badge'}
-        onClick={() => navigate('/badge')}
+        onClick={() => handleNavigation('/badge')}
       >
         <img src={badge} alt='badge' />
         <div>배지</div>
       </NavItem>
       <NavItem
         $fillcolor={currentPath.current === '/statistics'}
-        onClick={() => navigate('/statistics')}
+        onClick={() => handleNavigation('/statistics')}
       >
         <img src={statistics} alt='statistics' />
         <div>통계</div>

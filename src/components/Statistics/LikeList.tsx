@@ -4,12 +4,14 @@ import {QueryFunctionContext, useInfiniteQuery} from '@tanstack/react-query';
 import {useInView} from 'react-intersection-observer';
 import {getLikeList} from '@/apis/api/like';
 import {EventListProps} from '@/assets/types/event';
+import {useScrollStore} from '@/store/eventList';
 import EventItem from '../Event/EventItem';
 import EventItemSkeleton from '../Event/EventItemSkeleton';
 import NoList from '../common/NoList';
 
 function LikeList() {
   const [ref, inView] = useInView();
+  const {scrollY} = useScrollStore();
 
   const getList = async ({pageParam}: QueryFunctionContext) => {
     const data = await getLikeList(pageParam as number);
@@ -32,6 +34,12 @@ function LikeList() {
       fetchNextPage();
     }
   }, [fetchNextPage, inView]);
+
+  useEffect(() => {
+    if (scrollY !== 0) {
+      window.scrollTo(0, scrollY);
+    }
+  }, [scrollY]);
 
   return (
     <Container>

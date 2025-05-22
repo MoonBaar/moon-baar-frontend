@@ -5,7 +5,7 @@ export default function ScrollToTop() {
   const {pathname} = useLocation();
 
   useEffect(() => {
-    const skipRestorePaths = ['/event'];
+    const skipRestorePaths = ['/event', '/statistics', '/visited'];
 
     if (skipRestorePaths.includes(pathname)) return;
 
