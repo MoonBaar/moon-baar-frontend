@@ -1,19 +1,30 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from 'react-router-dom';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import ScrollToTop from './components/common/ScrollToTop';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement,
 );
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const queryClient = new QueryClient();
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
+window.Kakao.isInitialized();
+
+if (process.env.NODE_ENV === 'production') {
+  ['log', 'warn', 'error'].forEach(method => {
+    (console as any)[method] = () => {
+      /* no-op */
+    };
+  });
+}
+
+root.render(
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <ScrollToTop />
+      <App />
+    </BrowserRouter>
+  </QueryClientProvider>,
+);
